@@ -2,6 +2,12 @@
 
 const CSV_URL = "orari_eav_air.csv";
 const DAY_MINUTES = 24 * 60;
+const QUERY_KEYS = {
+  from: "from",
+  to: "to",
+  time: "time",
+  line: "line",
+};
 const THEME_STORAGE_KEY = "bus-na-bn-theme";
 const THEME_COLORS = {
   light: "#0f6b4d",
@@ -49,7 +55,8 @@ async function init() {
     populateFromOptions();
     setInitialRoute();
     updateToOptions();
-    renderResults();
+    applyQueryParams();
+    updateResults({ replaceUrl: true });
 
     els.status.textContent = `${state.trips.length} corse`;
   } catch (error) {
@@ -62,22 +69,22 @@ async function init() {
 function bindEvents() {
   els.form.addEventListener("submit", (event) => {
     event.preventDefault();
-    renderResults();
+    updateResults();
   });
 
   els.from.addEventListener("change", () => {
     updateToOptions();
-    renderResults();
+    updateResults();
   });
 
-  els.to.addEventListener("change", renderResults);
+  els.to.addEventListener("change", updateResults);
 
-  els.time.addEventListener("input", renderResults);
+  els.time.addEventListener("input", updateResults);
 
   els.line.addEventListener("change", () => {
     populateFromOptions(els.from.value);
     updateToOptions(els.to.value);
-    renderResults();
+    updateResults();
   });
 
   els.swap.addEventListener("click", swapStops);
@@ -88,7 +95,7 @@ function bindEvents() {
     populateFromOptions();
     setInitialRoute();
     updateToOptions();
-    renderResults();
+    updateResults();
   });
 
   els.theme.addEventListener("click", () => {
@@ -357,6 +364,58 @@ function setInitialRoute() {
   }
 }
 
+function applyQueryParams() {
+  const params = new URLSearchParams(window.location.search);
+  const line = params.get(QUERY_KEYS.line) ?? "";
+  const from = params.get(QUERY_KEYS.from) ?? "";
+  const to = params.get(QUERY_KEYS.to) ?? "";
+  const time = params.get(QUERY_KEYS.time) ?? "";
+
+  if (selectHasValue(els.line, line)) {
+    els.line.value = line;
+    populateFromOptions(els.from.value);
+  }
+
+  if (selectHasValue(els.from, from)) {
+    els.from.value = from;
+  }
+
+  updateToOptions(els.to.value);
+
+  if (selectHasValue(els.to, to)) {
+    els.to.value = to;
+  }
+
+  if (timeToMinutes(time) !== null) {
+    els.time.value = time;
+  }
+}
+
+function updateQueryParams() {
+  if (!window.history?.replaceState) {
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  setQueryValue(params, QUERY_KEYS.from, els.from.value);
+  setQueryValue(params, QUERY_KEYS.to, els.to.value);
+  setQueryValue(params, QUERY_KEYS.time, els.time.value);
+  setQueryValue(params, QUERY_KEYS.line, els.line.value);
+
+  const queryString = params.toString();
+  const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ""}${window.location.hash}`;
+
+  window.history.replaceState(null, "", nextUrl);
+}
+
+function setQueryValue(params, key, value) {
+  if (value) {
+    params.set(key, value);
+  } else {
+    params.delete(key);
+  }
+}
+
 function swapStops() {
   if (!state.ready) {
     return;
@@ -382,7 +441,7 @@ function swapStops() {
     updateToOptions(nextTo);
   }
 
-  renderResults();
+  updateResults();
 }
 
 function findTrip(from, to, line) {
@@ -433,6 +492,14 @@ function renderResults() {
   const fragment = document.createDocumentFragment();
   matches.forEach((trip) => fragment.append(createTripElement(trip)));
   els.results.replaceChildren(fragment);
+}
+
+function updateResults({ replaceUrl = true } = {}) {
+  renderResults();
+
+  if (replaceUrl) {
+    updateQueryParams();
+  }
 }
 
 function createTripElement(trip) {
