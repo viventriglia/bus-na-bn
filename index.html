@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f6b4d">
+    <title>BN NA Bus</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">EAV + AIR</p>
+          <h1>BN &lt;&gt; NA</h1>
+        </div>
+        <p id="dataStatus" class="status" aria-live="polite">Caricamento</p>
+      </header>
+
+      <section class="search-panel" aria-labelledby="searchTitle">
+        <h2 id="searchTitle">Cerca corsa</h2>
+        <form id="searchForm" class="search-form">
+          <div class="field">
+            <label for="fromStop">Partenza</label>
+            <select id="fromStop" name="fromStop" required></select>
+          </div>
+
+          <button class="swap-button" type="button" id="swapStops" aria-label="Inverti partenza e arrivo" title="Inverti">
+            <span aria-hidden="true">&harr;</span>
+          </button>
+
+          <div class="field">
+            <label for="toStop">Arrivo</label>
+            <select id="toStop" name="toStop" required></select>
+          </div>
+
+          <div class="field time-field">
+            <label for="timeFrom">Partenze dalle</label>
+            <input id="timeFrom" name="timeFrom" type="time" required>
+          </div>
+
+          <div class="field line-field">
+            <label for="lineFilter">Linea</label>
+            <select id="lineFilter" name="lineFilter">
+              <option value="">Tutte</option>
+            </select>
+          </div>
+
+          <div class="actions">
+            <button class="primary-button" type="submit">Cerca</button>
+            <button class="secondary-button" type="button" id="resetSearch">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="results-section" aria-labelledby="resultsTitle">
+        <div class="results-heading">
+          <h2 id="resultsTitle">Risultati</h2>
+          <p id="resultsSummary" class="summary" aria-live="polite"></p>
+        </div>
+        <div id="results" class="results"></div>
+      </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
