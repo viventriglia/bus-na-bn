@@ -2,6 +2,11 @@
 
 const CSV_URL = "orari_eav_air.csv";
 const DAY_MINUTES = 24 * 60;
+const THEME_STORAGE_KEY = "bus-na-bn-theme";
+const THEME_COLORS = {
+  light: "#0f6b4d",
+  dark: "#101614",
+};
 const collator = new Intl.Collator("it", { sensitivity: "base" });
 const CITY_OPTIONS = [
   { value: "__city:Napoli", label: "Napoli - TUTTE", city: "Napoli" },
@@ -21,6 +26,9 @@ const els = {
   line: document.querySelector("#lineFilter"),
   swap: document.querySelector("#swapStops"),
   reset: document.querySelector("#resetSearch"),
+  theme: document.querySelector("#themeToggle"),
+  themeLabel: document.querySelector("#themeToggleLabel"),
+  themeColor: document.querySelector('meta[name="theme-color"]'),
   results: document.querySelector("#results"),
   summary: document.querySelector("#resultsSummary"),
   status: document.querySelector("#dataStatus"),
@@ -29,6 +37,7 @@ const els = {
 init();
 
 async function init() {
+  initTheme();
   setCurrentTime();
   bindEvents();
 
@@ -81,6 +90,88 @@ function bindEvents() {
     updateToOptions();
     renderResults();
   });
+
+  els.theme.addEventListener("click", () => {
+    const nextTheme = getEffectiveTheme() === "dark" ? "light" : "dark";
+
+    writeThemePreference(nextTheme);
+    applyTheme(nextTheme);
+  });
+}
+
+function initTheme() {
+  applyTheme(readThemePreference());
+
+  const media = getThemeMedia();
+  if (!media?.addEventListener) {
+    return;
+  }
+
+  media.addEventListener("change", () => {
+    if (!readThemePreference()) {
+      syncThemeControls();
+    }
+  });
+}
+
+function applyTheme(theme) {
+  if (theme === "dark" || theme === "light") {
+    document.documentElement.dataset.theme = theme;
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+
+  syncThemeControls();
+}
+
+function syncThemeControls() {
+  const theme = getEffectiveTheme();
+  const isDark = theme === "dark";
+  const label = isDark ? "Attiva tema chiaro" : "Attiva tema scuro";
+
+  els.theme.classList.toggle("is-dark", isDark);
+  els.theme.setAttribute("aria-pressed", String(isDark));
+  els.theme.setAttribute("aria-label", label);
+
+  if (els.themeLabel) {
+    els.themeLabel.textContent = label;
+  }
+
+  if (els.themeColor) {
+    els.themeColor.setAttribute("content", THEME_COLORS[theme]);
+  }
+}
+
+function getEffectiveTheme() {
+  const explicitTheme = document.documentElement.dataset.theme;
+
+  if (explicitTheme === "dark" || explicitTheme === "light") {
+    return explicitTheme;
+  }
+
+  return getThemeMedia()?.matches ? "dark" : "light";
+}
+
+function getThemeMedia() {
+  return window.matchMedia?.("(prefers-color-scheme: dark)");
+}
+
+function readThemePreference() {
+  try {
+    const value = localStorage.getItem(THEME_STORAGE_KEY);
+
+    return value === "dark" || value === "light" ? value : "";
+  } catch {
+    return "";
+  }
+}
+
+function writeThemePreference(theme) {
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch {
+    // The theme still changes for the current page even if storage is blocked.
+  }
 }
 
 async function fetchCsv(url) {

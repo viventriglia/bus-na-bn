@@ -14,11 +14,27 @@
           <p class="eyebrow">EAV + AIR</p>
           <h1>BN &lt;&gt; NA</h1>
         </div>
-        <p id="dataStatus" class="status" aria-live="polite">Caricamento</p>
+        <div class="header-actions">
+          <button class="theme-toggle" type="button" id="themeToggle" aria-pressed="false" aria-label="Attiva tema scuro">
+            <span class="theme-icon sun-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+              </svg>
+            </span>
+            <span class="theme-icon moon-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M20.6 14.6A8.2 8.2 0 0 1 9.4 3.4a8.7 8.7 0 1 0 11.2 11.2Z"></path>
+              </svg>
+            </span>
+            <span class="sr-only" id="themeToggleLabel">Attiva tema scuro</span>
+          </button>
+          <p id="dataStatus" class="status" aria-live="polite">Caricamento</p>
+        </div>
       </header>
 
       <section class="search-panel" aria-labelledby="searchTitle">
-        <h2 id="searchTitle">Cerca corsa</h2>
+        <h2 id="searchTitle">Filtra corse</h2>
         <form id="searchForm" class="search-form">
           <div class="field">
             <label for="fromStop">Partenza</label>
@@ -47,8 +63,7 @@
           </div>
 
           <div class="actions">
-            <button class="primary-button" type="submit">Cerca</button>
-            <button class="secondary-button" type="button" id="resetSearch">Reset</button>
+            <button class="secondary-button" type="button" id="resetSearch">Reset filtri</button>
           </div>
         </form>
       </section>
@@ -60,6 +75,8 @@
         </div>
         <div id="results" class="results"></div>
       </section>
+
+      <footer class="app-footer">Built with 💙 by Bubu for Dudu</footer>
     </main>
 
     <script src="data.js"></script>
