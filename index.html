@@ -11,8 +11,7 @@
     <main class="app">
       <header class="app-header">
         <div>
-          <p class="eyebrow">EAV + AIR</p>
-          <h1>BN &lt;&gt; NA</h1>
+          <h1 id="pageTitle">Quando vedrai il Vesuvio?</h1>
         </div>
         <div class="header-actions">
           <button class="theme-toggle" type="button" id="themeToggle" aria-pressed="false" aria-label="Attiva tema scuro">
@@ -34,7 +33,10 @@
       </header>
 
       <section class="search-panel" aria-labelledby="searchTitle">
-        <h2 id="searchTitle">Filtra corse</h2>
+        <div class="search-panel-header">
+          <h2 id="searchTitle">Filtra corse</h2>
+          <button class="secondary-button compact-button" type="button" id="resetSearch">Reset filtri</button>
+        </div>
         <form id="searchForm" class="search-form">
           <div class="field">
             <label for="fromStop">Partenza</label>
@@ -51,19 +53,20 @@
           </div>
 
           <div class="field time-field">
-            <label for="timeFrom">Partenze dalle</label>
-            <input id="timeFrom" name="timeFrom" type="time" required>
-          </div>
-
-          <div class="field line-field">
-            <label for="lineFilter">Linea</label>
-            <select id="lineFilter" name="lineFilter">
-              <option value="">Tutte</option>
-            </select>
-          </div>
-
-          <div class="actions">
-            <button class="secondary-button" type="button" id="resetSearch">Reset filtri</button>
+            <span class="field-label">Orario</span>
+            <div class="time-filter">
+              <div class="time-mode" role="radiogroup" aria-label="Tipo filtro orario">
+                <label class="time-mode-option">
+                  <input type="radio" name="timeMode" value="departure" checked>
+                  <span>Partenza dalle</span>
+                </label>
+                <label class="time-mode-option">
+                  <input type="radio" name="timeMode" value="arrival">
+                  <span>Arrivo entro</span>
+                </label>
+              </div>
+              <input id="timeFrom" name="timeFrom" type="time" aria-label="Partenza dalle" required>
+            </div>
           </div>
         </form>
       </section>

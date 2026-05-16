@@ -6,7 +6,17 @@ const QUERY_KEYS = {
   from: "from",
   to: "to",
   time: "time",
+  mode: "mode",
   line: "line",
+};
+const DEFAULT_FROM = "__city:Benevento";
+const DEFAULT_TO = "__city:Napoli";
+const DEFAULT_TIME_MODE = "departure";
+const TIME_MODES = new Set(["departure", "arrival"]);
+const TITLES = {
+  beneventoToNapoli: "Quando vedrai il Vesuvio?",
+  napoliToBenevento: "Quando torni a S. Colomba III?",
+  fallback: "BN <> NA",
 };
 const THEME_STORAGE_KEY = "bus-na-bn-theme";
 const THEME_COLORS = {
@@ -25,11 +35,12 @@ const state = {
 };
 
 const els = {
+  title: document.querySelector("#pageTitle"),
   form: document.querySelector("#searchForm"),
   from: document.querySelector("#fromStop"),
   to: document.querySelector("#toStop"),
   time: document.querySelector("#timeFrom"),
-  line: document.querySelector("#lineFilter"),
+  timeModes: document.querySelectorAll('input[name="timeMode"]'),
   swap: document.querySelector("#swapStops"),
   reset: document.querySelector("#resetSearch"),
   theme: document.querySelector("#themeToggle"),
@@ -51,10 +62,9 @@ async function init() {
     state.trips = await loadSchedule();
     state.ready = true;
 
-    populateLineOptions();
     populateFromOptions();
     setInitialRoute();
-    updateToOptions();
+    updateToOptions(DEFAULT_TO);
     applyQueryParams();
     updateResults({ replaceUrl: true });
 
@@ -81,20 +91,21 @@ function bindEvents() {
 
   els.time.addEventListener("input", updateResults);
 
-  els.line.addEventListener("change", () => {
-    populateFromOptions(els.from.value);
-    updateToOptions(els.to.value);
-    updateResults();
+  els.timeModes.forEach((input) => {
+    input.addEventListener("change", () => {
+      syncTimeModeControls();
+      updateResults();
+    });
   });
 
   els.swap.addEventListener("click", swapStops);
 
   els.reset.addEventListener("click", () => {
-    els.line.value = "";
     setCurrentTime();
+    setTimeMode(DEFAULT_TIME_MODE);
     populateFromOptions();
     setInitialRoute();
-    updateToOptions();
+    updateToOptions(DEFAULT_TO);
     updateResults();
   });
 
@@ -283,20 +294,9 @@ function toTrip(headers, values, rowNumber) {
   };
 }
 
-function populateLineOptions() {
-  const current = els.line.value;
-  const lines = uniqueSorted(state.trips.map((trip) => trip.line));
-  const options = [new Option("Tutte", ""), ...lines.map((line) => new Option(line, line))];
-
-  replaceOptions(els.line, options);
-  els.line.value = lines.includes(current) ? current : "";
-}
-
 function populateFromOptions(preferredValue = "") {
-  const currentLine = els.line.value;
   const stops = uniqueSorted(
     state.trips
-      .filter((trip) => !currentLine || trip.line === currentLine)
       .map((trip) => trip.departureStop),
   );
   const { options, values } = buildStopOptions(stops);
@@ -307,14 +307,11 @@ function populateFromOptions(preferredValue = "") {
 }
 
 function updateToOptions(preferredValue = "") {
-  const currentLine = els.line.value;
   const currentFrom = els.from.value;
   const stops = uniqueSorted(
     state.trips
       .filter(
-        (trip) =>
-          (!currentLine || trip.line === currentLine) &&
-          stopMatchesSelection(trip.departureStop, currentFrom),
+        (trip) => stopMatchesSelection(trip.departureStop, currentFrom),
       )
       .map((trip) => trip.arrivalStop),
   );
@@ -353,28 +350,17 @@ function pickSelectValue(values, preferredValue, fallbackValue) {
 }
 
 function setInitialRoute() {
-  const firstTrip = state.trips.find((trip) => !els.line.value || trip.line === els.line.value);
-
-  if (!firstTrip) {
-    return;
-  }
-
-  if (selectHasValue(els.from, firstTrip.departureStop)) {
-    els.from.value = firstTrip.departureStop;
+  if (selectHasValue(els.from, DEFAULT_FROM)) {
+    els.from.value = DEFAULT_FROM;
   }
 }
 
 function applyQueryParams() {
   const params = new URLSearchParams(window.location.search);
-  const line = params.get(QUERY_KEYS.line) ?? "";
   const from = params.get(QUERY_KEYS.from) ?? "";
   const to = params.get(QUERY_KEYS.to) ?? "";
   const time = params.get(QUERY_KEYS.time) ?? "";
-
-  if (selectHasValue(els.line, line)) {
-    els.line.value = line;
-    populateFromOptions(els.from.value);
-  }
+  const mode = params.get(QUERY_KEYS.mode) ?? "";
 
   if (selectHasValue(els.from, from)) {
     els.from.value = from;
@@ -389,6 +375,8 @@ function applyQueryParams() {
   if (timeToMinutes(time) !== null) {
     els.time.value = time;
   }
+
+  setTimeMode(isTimeMode(mode) ? mode : DEFAULT_TIME_MODE);
 }
 
 function updateQueryParams() {
@@ -400,7 +388,8 @@ function updateQueryParams() {
   setQueryValue(params, QUERY_KEYS.from, els.from.value);
   setQueryValue(params, QUERY_KEYS.to, els.to.value);
   setQueryValue(params, QUERY_KEYS.time, els.time.value);
-  setQueryValue(params, QUERY_KEYS.line, els.line.value);
+  setQueryValue(params, QUERY_KEYS.mode, getTimeMode() === DEFAULT_TIME_MODE ? "" : getTimeMode());
+  params.delete(QUERY_KEYS.line);
 
   const queryString = params.toString();
   const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ""}${window.location.hash}`;
@@ -416,6 +405,28 @@ function setQueryValue(params, key, value) {
   }
 }
 
+function getTimeMode() {
+  return [...els.timeModes].find((input) => input.checked)?.value ?? DEFAULT_TIME_MODE;
+}
+
+function setTimeMode(mode) {
+  const nextMode = isTimeMode(mode) ? mode : DEFAULT_TIME_MODE;
+
+  els.timeModes.forEach((input) => {
+    input.checked = input.value === nextMode;
+  });
+  syncTimeModeControls();
+}
+
+function syncTimeModeControls() {
+  const isArrivalMode = getTimeMode() === "arrival";
+  els.time.setAttribute("aria-label", isArrivalMode ? "Arrivo entro" : "Partenza dalle");
+}
+
+function isTimeMode(mode) {
+  return TIME_MODES.has(mode);
+}
+
 function swapStops() {
   if (!state.ready) {
     return;
@@ -423,16 +434,9 @@ function swapStops() {
 
   const nextFrom = els.to.value;
   const nextTo = els.from.value;
-  const currentLine = els.line.value;
-  let reverseTrip = findTrip(nextFrom, nextTo, currentLine);
+  const reverseTrip = findTrip(nextFrom, nextTo);
 
-  if (!reverseTrip && currentLine) {
-    els.line.value = "";
-    populateFromOptions(nextFrom);
-    reverseTrip = findTrip(nextFrom, nextTo, "");
-  } else {
-    populateFromOptions(nextFrom);
-  }
+  populateFromOptions(nextFrom);
 
   if (reverseTrip) {
     els.from.value = selectHasValue(els.from, nextFrom) ? nextFrom : reverseTrip.departureStop;
@@ -444,12 +448,11 @@ function swapStops() {
   updateResults();
 }
 
-function findTrip(from, to, line) {
+function findTrip(from, to) {
   return state.trips.find(
     (trip) =>
       stopMatchesSelection(trip.departureStop, from) &&
-      stopMatchesSelection(trip.arrivalStop, to) &&
-      (!line || trip.line === line),
+      stopMatchesSelection(trip.arrivalStop, to),
   );
 }
 
@@ -470,13 +473,23 @@ function renderResults() {
     .filter(
       (trip) =>
         stopMatchesSelection(trip.departureStop, els.from.value) &&
-        stopMatchesSelection(trip.arrivalStop, els.to.value) &&
-        (!els.line.value || trip.line === els.line.value),
+        stopMatchesSelection(trip.arrivalStop, els.to.value),
     )
     .sort((a, b) => a.departureMinutes - b.departureMinutes || a.durationMinutes - b.durationMinutes);
 
-  const matches = routeTrips.filter((trip) => trip.departureMinutes >= selectedMinutes);
-  els.summary.textContent = makeSummary(matches.length, selectedMinutes);
+  const timeMode = getTimeMode();
+  const matches = routeTrips
+    .filter((trip) =>
+      timeMode === "arrival"
+        ? trip.arrivalMinutes <= selectedMinutes
+        : trip.departureMinutes >= selectedMinutes,
+    )
+    .sort((a, b) =>
+      timeMode === "arrival"
+        ? b.arrivalMinutes - a.arrivalMinutes || b.departureMinutes - a.departureMinutes
+        : a.departureMinutes - b.departureMinutes || a.durationMinutes - b.durationMinutes,
+    );
+  els.summary.textContent = makeSummary(matches.length, selectedMinutes, timeMode);
 
   if (routeTrips.length === 0) {
     renderEmpty("Nessuna corsa per questa tratta.", "Prova a cambiare linea o fermata.");
@@ -484,8 +497,24 @@ function renderResults() {
   }
 
   if (matches.length === 0) {
-    const firstDepartures = routeTrips.slice(0, 3).map((trip) => trip.departureTime).join(", ");
-    renderEmpty(`Nessuna corsa dopo le ${formatTime(selectedMinutes)}.`, `Prime corse disponibili: ${firstDepartures}.`);
+    const hintTimes =
+      timeMode === "arrival"
+        ? [...routeTrips]
+            .sort((a, b) => a.arrivalMinutes - b.arrivalMinutes)
+            .slice(0, 3)
+            .map((trip) => trip.arrivalTime)
+            .join(", ")
+        : routeTrips.slice(0, 3).map((trip) => trip.departureTime).join(", ");
+    const title =
+      timeMode === "arrival"
+        ? `Nessuna corsa con arrivo entro le ${formatTime(selectedMinutes)}.`
+        : `Nessuna corsa dopo le ${formatTime(selectedMinutes)}.`;
+    const hint =
+      timeMode === "arrival"
+        ? `Primi arrivi disponibili: ${hintTimes}.`
+        : `Prime corse disponibili: ${hintTimes}.`;
+
+    renderEmpty(title, hint);
     return;
   }
 
@@ -495,11 +524,29 @@ function renderResults() {
 }
 
 function updateResults({ replaceUrl = true } = {}) {
+  updatePageTitle();
   renderResults();
 
   if (replaceUrl) {
     updateQueryParams();
   }
+}
+
+function updatePageTitle() {
+  const fromCity = getSelectionCity(els.from.value);
+  const toCity = getSelectionCity(els.to.value);
+
+  if (fromCity === "Benevento" && toCity === "Napoli") {
+    els.title.textContent = TITLES.beneventoToNapoli;
+    return;
+  }
+
+  if (fromCity === "Napoli" && toCity === "Benevento") {
+    els.title.textContent = TITLES.napoliToBenevento;
+    return;
+  }
+
+  els.title.textContent = TITLES.fallback;
 }
 
 function createTripElement(trip) {
@@ -582,9 +629,11 @@ function renderError(title, hint) {
   els.results.replaceChildren(wrapper);
 }
 
-function makeSummary(count, selectedMinutes) {
+function makeSummary(count, selectedMinutes, timeMode = DEFAULT_TIME_MODE) {
   const label = count === 1 ? "corsa" : "corse";
-  return `${count} ${label} dalle ${formatTime(selectedMinutes)}`;
+  const timeLabel = timeMode === "arrival" ? "entro le" : "dalle";
+
+  return `${count} ${label} ${timeLabel} ${formatTime(selectedMinutes)}`;
 }
 
 function uniqueSorted(values) {
@@ -607,6 +656,10 @@ function stopMatchesSelection(stop, selection) {
 
 function getCityOption(value) {
   return CITY_OPTIONS.find((option) => option.value === value);
+}
+
+function getSelectionCity(selection) {
+  return getCityOption(selection)?.city ?? getStopCity(selection);
 }
 
 function getStopCity(stop) {
