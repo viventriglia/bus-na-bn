@@ -12,203 +12,203 @@ window.BUS_SCHEDULE_DATA = {
     [
       "04:59",
       "06:37",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "05:44",
       "07:22",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "05:44",
       "07:03",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "06:20",
       "08:02",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "06:50",
       "08:09",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "07:58",
       "09:45",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "07:58",
       "09:17",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "09:06",
       "10:48",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "09:06",
       "10:25",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "12:05",
       "13:43",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "13:11",
       "14:51",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "14:19",
       "16:07",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "16:33",
       "18:15",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "17:41",
       "19:21",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "17:41",
       "19:00",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "18:49",
       "20:36",
-      "Benevento - RFI",
-      "Napoli Centrale - RFI",
+      "Benevento Stazione - via P. Diacono",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
     ],
     [
       "07:00",
       "08:39",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "08:21",
       "10:04",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "12:18",
       "14:00",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "13:30",
       "15:13",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "14:30",
       "16:13",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "14:30",
       "15:49",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "15:31",
       "17:11",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "16:30",
       "18:16",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "18:00",
       "19:43",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "18:00",
       "19:19",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "19:00",
       "20:42",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "20:00",
       "21:41",
-      "Napoli Centrale - RFI",
-      "Benevento - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
       "EAV"
     ],
     [
       "21:13",
       "22:40",
-      "Napoli Centrale - RFI",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "Benevento Appia",
       "EAV"
     ],
