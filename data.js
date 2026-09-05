@@ -24,22 +24,8 @@ window.BUS_SCHEDULE_DATA = {
       "EAV"
     ],
     [
-      "05:44",
-      "07:03",
-      "Benevento Stazione - via P. Diacono",
-      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
-      "EAV"
-    ],
-    [
       "06:20",
       "08:02",
-      "Benevento Stazione - via P. Diacono",
-      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
-      "EAV"
-    ],
-    [
-      "06:50",
-      "08:09",
       "Benevento Stazione - via P. Diacono",
       "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
@@ -52,22 +38,8 @@ window.BUS_SCHEDULE_DATA = {
       "EAV"
     ],
     [
-      "07:58",
-      "09:17",
-      "Benevento Stazione - via P. Diacono",
-      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
-      "EAV"
-    ],
-    [
       "09:06",
       "10:48",
-      "Benevento Stazione - via P. Diacono",
-      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
-      "EAV"
-    ],
-    [
-      "09:06",
-      "10:25",
       "Benevento Stazione - via P. Diacono",
       "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "EAV"
@@ -108,20 +80,6 @@ window.BUS_SCHEDULE_DATA = {
       "EAV"
     ],
     [
-      "17:41",
-      "19:00",
-      "Benevento Stazione - via P. Diacono",
-      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
-      "EAV"
-    ],
-    [
-      "18:49",
-      "20:36",
-      "Benevento Stazione - via P. Diacono",
-      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
-      "EAV"
-    ],
-    [
       "07:00",
       "08:39",
       "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
@@ -157,13 +115,6 @@ window.BUS_SCHEDULE_DATA = {
       "EAV"
     ],
     [
-      "14:30",
-      "15:49",
-      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
-      "Benevento Stazione - via P. Diacono",
-      "EAV"
-    ],
-    [
       "15:31",
       "17:11",
       "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
@@ -185,13 +136,6 @@ window.BUS_SCHEDULE_DATA = {
       "EAV"
     ],
     [
-      "18:00",
-      "19:19",
-      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
-      "Benevento Stazione - via P. Diacono",
-      "EAV"
-    ],
-    [
       "19:00",
       "20:42",
       "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
@@ -203,13 +147,6 @@ window.BUS_SCHEDULE_DATA = {
       "21:41",
       "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "Benevento Stazione - via P. Diacono",
-      "EAV"
-    ],
-    [
-      "21:13",
-      "22:40",
-      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
-      "Benevento Appia",
       "EAV"
     ],
     [
@@ -257,6 +194,13 @@ window.BUS_SCHEDULE_DATA = {
     [
       "08:00",
       "10:00",
+      "Benevento, Terminal bus - via Mustilli",
+      "Napoli Metropark - Terminal bus",
+      "AIR"
+    ],
+    [
+      "08:30",
+      "10:30",
       "Benevento, Terminal bus - via Mustilli",
       "Napoli Metropark - Terminal bus",
       "AIR"
@@ -396,7 +340,7 @@ window.BUS_SCHEDULE_DATA = {
     ],
     [
       "19:15",
-      "21:00",
+      "21:15",
       "Napoli Metropark - Terminal bus",
       "Benevento, Terminal bus - via Mustilli",
       "AIR"
@@ -408,5 +352,193 @@ window.BUS_SCHEDULE_DATA = {
       "Benevento, Terminal bus - via Mustilli",
       "AIR"
     ]
+  ],
+  "journeys": [
+    {
+      "id": "MOTTAM-A1",
+      "line": "MOT.TAM",
+      "direction": "andata",
+      "stops": [
+        {
+          "order": 1,
+          "name": "Benevento, Terminal bus - via Mustilli",
+          "time": "06:45",
+          "note": ""
+        },
+        {
+          "order": 2,
+          "name": "Benevento, Bar 2000",
+          "time": "06:50",
+          "note": ""
+        },
+        {
+          "order": 3,
+          "name": "Napoli, Piazza Garibaldi",
+          "time": "08:00",
+          "note": ""
+        },
+        {
+          "order": 4,
+          "name": "Napoli, via De Pretis (Piazza Municipio)",
+          "time": "",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "MOTTAM-A2",
+      "line": "MOT.TAM",
+      "direction": "andata",
+      "stops": [
+        {
+          "order": 1,
+          "name": "Benevento, Terminal bus - via Mustilli",
+          "time": "07:55",
+          "note": ""
+        },
+        {
+          "order": 2,
+          "name": "Benevento, Bar 2000",
+          "time": "08:00",
+          "note": ""
+        },
+        {
+          "order": 3,
+          "name": "Napoli, Piazza Garibaldi",
+          "time": "09:15",
+          "note": ""
+        },
+        {
+          "order": 4,
+          "name": "Napoli, via De Pretis (Piazza Municipio)",
+          "time": "",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "MOTTAM-A3",
+      "line": "MOT.TAM",
+      "direction": "andata",
+      "stops": [
+        {
+          "order": 1,
+          "name": "Benevento, Terminal bus - via Mustilli",
+          "time": "13:15",
+          "note": ""
+        },
+        {
+          "order": 2,
+          "name": "Benevento, Bar 2000",
+          "time": "13:20",
+          "note": ""
+        },
+        {
+          "order": 3,
+          "name": "Napoli, Piazza Garibaldi",
+          "time": "14:30",
+          "note": ""
+        },
+        {
+          "order": 4,
+          "name": "Napoli, via De Pretis (Piazza Municipio)",
+          "time": "",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "MOTTAM-R1",
+      "line": "MOT.TAM",
+      "direction": "ritorno",
+      "stops": [
+        {
+          "order": 1,
+          "name": "Napoli, via De Pretis (Piazza Municipio)",
+          "time": "14:15",
+          "note": ""
+        },
+        {
+          "order": 2,
+          "name": "Napoli, Corso Meridionale",
+          "time": "14:30",
+          "note": ""
+        },
+        {
+          "order": 3,
+          "name": "Benevento, Bar 2000",
+          "time": "15:45",
+          "note": ""
+        },
+        {
+          "order": 4,
+          "name": "Benevento, Terminal bus - via Mustilli",
+          "time": "15:50",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "MOTTAM-R2",
+      "line": "MOT.TAM",
+      "direction": "ritorno",
+      "stops": [
+        {
+          "order": 1,
+          "name": "Napoli, via De Pretis (Piazza Municipio)",
+          "time": "16:00",
+          "note": ""
+        },
+        {
+          "order": 2,
+          "name": "Napoli, Corso Meridionale",
+          "time": "16:15",
+          "note": ""
+        },
+        {
+          "order": 3,
+          "name": "Benevento, Bar 2000",
+          "time": "17:30",
+          "note": ""
+        },
+        {
+          "order": 4,
+          "name": "Benevento, Terminal bus - via Mustilli",
+          "time": "17:35",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "MOTTAM-R3",
+      "line": "MOT.TAM",
+      "direction": "ritorno",
+      "stops": [
+        {
+          "order": 1,
+          "name": "Napoli, via De Pretis (Piazza Municipio)",
+          "time": "17:05",
+          "note": ""
+        },
+        {
+          "order": 2,
+          "name": "Napoli, Corso Meridionale",
+          "time": "17:20",
+          "note": ""
+        },
+        {
+          "order": 3,
+          "name": "Benevento, Bar 2000",
+          "time": "18:20",
+          "note": ""
+        },
+        {
+          "order": 4,
+          "name": "Benevento, Terminal bus - via Mustilli",
+          "time": "18:25",
+          "note": ""
+        }
+      ]
+    }
   ]
 };

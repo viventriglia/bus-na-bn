@@ -1,6 +1,6 @@
 "use strict";
 
-const CSV_URL = "orari_eav_air.csv";
+const CSV_URL = "assets/timetables/orari_eav_air.csv";
 const DAY_MINUTES = 24 * 60;
 const QUERY_KEYS = {
   from: "from",
@@ -12,6 +12,7 @@ const QUERY_KEYS = {
 const DEFAULT_FROM = "__city:Benevento";
 const DEFAULT_TO = "__city:Napoli";
 const DEFAULT_TIME_MODE = "departure";
+const ALL_LINES = "__all";
 const TIME_MODES = new Set(["departure", "arrival"]);
 const TITLES = {
   beneventoToNapoli: "Quando vedrai il Vesuvio?",
@@ -39,6 +40,7 @@ const els = {
   form: document.querySelector("#searchForm"),
   from: document.querySelector("#fromStop"),
   to: document.querySelector("#toStop"),
+  line: document.querySelector("#lineFilter"),
   time: document.querySelector("#timeFrom"),
   timeModes: document.querySelectorAll('input[name="timeMode"]'),
   swap: document.querySelector("#swapStops"),
@@ -63,6 +65,7 @@ async function init() {
     state.ready = true;
 
     populateFromOptions();
+    populateLineOptions();
     setInitialRoute();
     updateToOptions(DEFAULT_TO);
     applyQueryParams();
@@ -88,6 +91,7 @@ function bindEvents() {
   });
 
   els.to.addEventListener("change", updateResults);
+  els.line.addEventListener("change", updateResults);
 
   els.time.addEventListener("input", updateResults);
 
@@ -103,6 +107,7 @@ function bindEvents() {
   els.reset.addEventListener("click", () => {
     setCurrentTime();
     setTimeMode(DEFAULT_TIME_MODE);
+    els.line.value = ALL_LINES;
     populateFromOptions();
     setInitialRoute();
     updateToOptions(DEFAULT_TO);
@@ -216,9 +221,14 @@ function isEmbeddedSchedule(data) {
 }
 
 function parseEmbeddedSchedule(data) {
-  return data.trips
+  const trips = data.trips
     .map((values, index) => toTrip(data.columns, values, index + 1))
-    .filter(Boolean)
+    .filter(Boolean);
+  const journeys = Array.isArray(data.journeys)
+    ? data.journeys.map((journey, index) => toJourney(journey, index + 1)).filter(Boolean)
+    : [];
+
+  return [...trips, ...journeys]
     .sort((a, b) => a.departureMinutes - b.departureMinutes || a.arrivalMinutes - b.arrivalMinutes);
 }
 
@@ -291,13 +301,71 @@ function toTrip(headers, values, rowNumber) {
     departureMinutes,
     arrivalMinutes,
     durationMinutes,
+    stops: [
+      {
+        name: row["stazione partenza"],
+        time: row["orario partenza"],
+        timeMinutes: departureMinutes,
+        note: "",
+      },
+      {
+        name: row["stazione arrivo"],
+        time: row["orario arrivo"],
+        timeMinutes: arrivalMinutes,
+        note: "",
+      },
+    ],
   };
+}
+
+function toJourney(journey, journeyNumber) {
+  if (!journey || !Array.isArray(journey.stops)) {
+    console.warn(`Corsa articolata ${journeyNumber} ignorata: fermate mancanti`);
+    return null;
+  }
+
+  const stops = journey.stops.map((stop) => ({
+    name: stop.name || "",
+    time: stop.time || "",
+    timeMinutes: stop.time ? timeToMinutes(stop.time) : null,
+    note: stop.note || "",
+  }));
+  const timedStops = stops.filter((stop) => stop.timeMinutes !== null);
+
+  if (timedStops.length < 2 || stops.some((stop) => stop.time && stop.timeMinutes === null)) {
+    console.warn(`Corsa articolata ${journeyNumber} ignorata: orari non validi`);
+    return null;
+  }
+
+  const firstStop = timedStops[0];
+  const lastStop = timedStops[timedStops.length - 1];
+  const durationMinutes = getDurationMinutes(firstStop.timeMinutes, lastStop.timeMinutes);
+
+  return {
+    id: journey.id || `journey-${journeyNumber}`,
+    line: journey.line || "",
+    direction: journey.direction || "",
+    departureTime: firstStop.time,
+    arrivalTime: lastStop.time,
+    departureStop: firstStop.name,
+    arrivalStop: lastStop.name,
+    departureMinutes: firstStop.timeMinutes,
+    arrivalMinutes: lastStop.timeMinutes,
+    durationMinutes,
+    stops,
+  };
+}
+
+function getDurationMinutes(departureMinutes, arrivalMinutes) {
+  return arrivalMinutes >= departureMinutes
+    ? arrivalMinutes - departureMinutes
+    : arrivalMinutes + DAY_MINUTES - departureMinutes;
 }
 
 function populateFromOptions(preferredValue = "") {
   const stops = uniqueSorted(
     state.trips
-      .map((trip) => trip.departureStop),
+      .flatMap(getJourneyDepartureStops),
   );
   const { options, values } = buildStopOptions(stops);
   const nextValue = pickSelectValue(values, preferredValue, stops[0] ?? "");
@@ -310,16 +378,37 @@ function updateToOptions(preferredValue = "") {
   const currentFrom = els.from.value;
   const stops = uniqueSorted(
     state.trips
-      .filter(
-        (trip) => stopMatchesSelection(trip.departureStop, currentFrom),
-      )
-      .map((trip) => trip.arrivalStop),
+      .flatMap((trip) => getJourneyArrivalStops(trip, currentFrom)),
   );
   const { options, values } = buildStopOptions(stops);
   const nextValue = pickSelectValue(values, preferredValue, stops[0] ?? "");
 
   replaceOptions(els.to, options);
   els.to.value = nextValue;
+}
+
+function getJourneyDepartureStops(trip) {
+  return trip.stops
+    .slice(0, -1)
+    .filter((stop, index) =>
+      stop.timeMinutes !== null && trip.stops.slice(index + 1).some((nextStop) => nextStop.timeMinutes !== null),
+    )
+    .map((stop) => stop.name);
+}
+
+function getJourneyArrivalStops(trip, fromSelection) {
+  const departureIndex = trip.stops.findIndex(
+    (stop) => stop.timeMinutes !== null && stopMatchesSelection(stop.name, fromSelection),
+  );
+
+  if (departureIndex < 0) {
+    return [];
+  }
+
+  return trip.stops
+    .slice(departureIndex + 1)
+    .filter((stop) => stop.timeMinutes !== null)
+    .map((stop) => stop.name);
 }
 
 function replaceOptions(select, options) {
@@ -335,6 +424,17 @@ function buildStopOptions(stops) {
   const values = options.map((option) => option.value);
 
   return { options, values };
+}
+
+function populateLineOptions() {
+  const lines = uniqueSorted(state.trips.map((trip) => trip.line));
+  const options = [
+    new Option("Tutte le linee", ALL_LINES),
+    ...lines.map((line) => new Option(line, line)),
+  ];
+
+  replaceOptions(els.line, options);
+  els.line.value = ALL_LINES;
 }
 
 function pickSelectValue(values, preferredValue, fallbackValue) {
@@ -361,6 +461,7 @@ function applyQueryParams() {
   const to = params.get(QUERY_KEYS.to) ?? "";
   const time = params.get(QUERY_KEYS.time) ?? "";
   const mode = params.get(QUERY_KEYS.mode) ?? "";
+  const line = params.get(QUERY_KEYS.line) ?? "";
 
   if (selectHasValue(els.from, from)) {
     els.from.value = from;
@@ -377,6 +478,10 @@ function applyQueryParams() {
   }
 
   setTimeMode(isTimeMode(mode) ? mode : DEFAULT_TIME_MODE);
+
+  if (selectHasValue(els.line, line)) {
+    els.line.value = line;
+  }
 }
 
 function updateQueryParams() {
@@ -389,7 +494,7 @@ function updateQueryParams() {
   setQueryValue(params, QUERY_KEYS.to, els.to.value);
   setQueryValue(params, QUERY_KEYS.time, els.time.value);
   setQueryValue(params, QUERY_KEYS.mode, getTimeMode() === DEFAULT_TIME_MODE ? "" : getTimeMode());
-  params.delete(QUERY_KEYS.line);
+  setQueryValue(params, QUERY_KEYS.line, els.line.value === ALL_LINES ? "" : els.line.value);
 
   const queryString = params.toString();
   const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ""}${window.location.hash}`;
@@ -449,11 +554,45 @@ function swapStops() {
 }
 
 function findTrip(from, to) {
-  return state.trips.find(
-    (trip) =>
-      stopMatchesSelection(trip.departureStop, from) &&
-      stopMatchesSelection(trip.arrivalStop, to),
+  return state.trips
+    .map((trip) => selectJourneySegment(trip, from, to))
+    .find(Boolean);
+}
+
+function selectJourneySegment(trip, fromSelection, toSelection) {
+  const departureIndex = trip.stops.findIndex(
+    (stop) => stop.timeMinutes !== null && stopMatchesSelection(stop.name, fromSelection),
   );
+
+  if (departureIndex < 0) {
+    return null;
+  }
+
+  let arrivalIndex = -1;
+  for (let index = departureIndex + 1; index < trip.stops.length; index += 1) {
+    const stop = trip.stops[index];
+    if (stop.timeMinutes !== null && stopMatchesSelection(stop.name, toSelection)) {
+      arrivalIndex = index;
+    }
+  }
+
+  if (arrivalIndex < 0) {
+    return null;
+  }
+
+  const departureStop = trip.stops[departureIndex];
+  const arrivalStop = trip.stops[arrivalIndex];
+
+  return {
+    ...trip,
+    departureTime: departureStop.time,
+    arrivalTime: arrivalStop.time,
+    departureStop: departureStop.name,
+    arrivalStop: arrivalStop.name,
+    departureMinutes: departureStop.timeMinutes,
+    arrivalMinutes: arrivalStop.timeMinutes,
+    durationMinutes: getDurationMinutes(departureStop.timeMinutes, arrivalStop.timeMinutes),
+  };
 }
 
 function renderResults() {
@@ -470,11 +609,9 @@ function renderResults() {
   }
 
   const routeTrips = state.trips
-    .filter(
-      (trip) =>
-        stopMatchesSelection(trip.departureStop, els.from.value) &&
-        stopMatchesSelection(trip.arrivalStop, els.to.value),
-    )
+    .map((trip) => selectJourneySegment(trip, els.from.value, els.to.value))
+    .filter(Boolean)
+    .filter((trip) => els.line.value === ALL_LINES || trip.line === els.line.value)
     .sort((a, b) => a.departureMinutes - b.departureMinutes || a.durationMinutes - b.durationMinutes);
 
   const timeMode = getTimeMode();
@@ -535,6 +672,7 @@ function updateResults({ replaceUrl = true } = {}) {
 function updatePageTitle() {
   const fromCity = getSelectionCity(els.from.value);
   const toCity = getSelectionCity(els.to.value);
+  document.body.dataset.destinationCity = toCity === "Benevento" ? "benevento" : "napoli";
 
   if (fromCity === "Benevento" && toCity === "Napoli") {
     els.title.textContent = TITLES.beneventoToNapoli;
@@ -577,11 +715,18 @@ function createTripElement(trip) {
 
   route.append(from, to);
 
+  if (trip.stops.length > 2) {
+    const journeyStops = document.createElement("small");
+    journeyStops.className = "journey-stops";
+    journeyStops.textContent = trip.stops.map(formatJourneyStop).join(" → ");
+    route.append(journeyStops);
+  }
+
   const aside = document.createElement("div");
   aside.className = "trip-aside";
 
   const badge = document.createElement("span");
-  const lineClass = trip.line ? trip.line.toLowerCase() : "unknown";
+  const lineClass = trip.line ? trip.line.toLowerCase().replace(/[^a-z0-9]+/g, "-") : "unknown";
   badge.className = `badge ${lineClass}`;
   badge.textContent = trip.line || "Linea";
 
@@ -593,6 +738,11 @@ function createTripElement(trip) {
   article.append(timeStack, route, aside);
 
   return article;
+}
+
+function formatJourneyStop(stop) {
+  const timedStop = stop.time ? `${stop.time} ${stop.name}` : stop.name;
+  return stop.note ? `${timedStop} — ${stop.note}` : timedStop;
 }
 
 function renderEmpty(title, hint) {

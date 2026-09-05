@@ -3,6 +3,8 @@
   --bg: #f5f7f2;
   --body-glow: rgba(15, 107, 77, 0.08);
   --body-glow-end: rgba(245, 247, 242, 0);
+  --destination-photo: url("assets/imgs/na.webp");
+  --photo-overlay: rgba(245, 247, 242, 0.76);
   --surface: #ffffff;
   --surface-muted: #eef3f1;
   --text: #17211c;
@@ -24,6 +26,8 @@
   --badge-eav-bg: #d9efe7;
   --badge-air-text: #633900;
   --badge-air-bg: #ffe3b5;
+  --badge-mottam-text: #4d176f;
+  --badge-mottam-bg: #eedcff;
   --shadow: 0 16px 36px rgba(22, 33, 28, 0.08);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -33,6 +37,7 @@
   --bg: #101614;
   --body-glow: rgba(56, 180, 135, 0.14);
   --body-glow-end: rgba(16, 22, 20, 0);
+  --photo-overlay: rgba(16, 22, 20, 0.78);
   --surface: #151d1a;
   --surface-muted: #1c2824;
   --text: #f1f7f3;
@@ -54,6 +59,8 @@
   --badge-eav-bg: #123d2e;
   --badge-air-text: #ffd999;
   --badge-air-bg: #4b3214;
+  --badge-mottam-text: #e7c5ff;
+  --badge-mottam-bg: #46205d;
   --shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
 }
 
@@ -63,6 +70,7 @@
     --bg: #101614;
     --body-glow: rgba(56, 180, 135, 0.14);
     --body-glow-end: rgba(16, 22, 20, 0);
+    --photo-overlay: rgba(16, 22, 20, 0.78);
     --surface: #151d1a;
     --surface-muted: #1c2824;
     --text: #f1f7f3;
@@ -84,6 +92,8 @@
     --badge-eav-bg: #123d2e;
     --badge-air-text: #ffd999;
     --badge-air-bg: #4b3214;
+    --badge-mottam-text: #e7c5ff;
+    --badge-mottam-bg: #46205d;
     --shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
   }
 }
@@ -98,12 +108,32 @@ html {
 }
 
 body {
+  position: relative;
+  isolation: isolate;
   min-height: 100%;
   margin: 0;
   color: var(--text);
-  background:
+  background: var(--bg);
+}
+
+body::before {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  background-image:
     linear-gradient(180deg, var(--body-glow), var(--body-glow-end) 260px),
-    var(--bg);
+    linear-gradient(var(--photo-overlay), var(--photo-overlay)),
+    var(--destination-photo);
+  background-position: center;
+  background-size: auto, auto, cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  transform: translateZ(0);
+  content: "";
+}
+
+body[data-destination-city="benevento"] {
+  --destination-photo: url("assets/imgs/bn.webp");
 }
 
 button,
@@ -126,6 +156,8 @@ button {
 }
 
 .app {
+  position: relative;
+  z-index: 1;
   width: min(100%, 980px);
   margin: 0 auto;
   padding: 20px 14px 32px;
@@ -261,7 +293,7 @@ h2 {
 
 .search-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr) minmax(150px, 0.5fr);
   gap: 12px;
   align-items: end;
 }
@@ -311,8 +343,17 @@ button:focus-visible {
 }
 
 .time-field {
-  grid-column: 1 / -1;
-  max-width: 620px;
+  grid-column: 1 / 4;
+  grid-row: 2;
+}
+
+.search-form > .field:nth-of-type(2) {
+  grid-column: 3 / 5;
+}
+
+.line-field {
+  grid-column: 4;
+  grid-row: 2;
 }
 
 .time-filter {
@@ -466,6 +507,14 @@ button:focus-visible {
   white-space: nowrap;
 }
 
+.route .journey-stops {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
 .trip-aside {
   display: grid;
   justify-items: end;
@@ -492,6 +541,11 @@ button:focus-visible {
 .badge.air {
   color: var(--badge-air-text);
   background: var(--badge-air-bg);
+}
+
+.badge.mot-tam {
+  color: var(--badge-mottam-text);
+  background: var(--badge-mottam-bg);
 }
 
 .meta {
@@ -550,8 +604,10 @@ button:focus-visible {
   }
 
   .search-form .field:nth-of-type(2),
+  .line-field,
   .time-field {
     grid-column: 1 / -1;
+    grid-row: auto;
   }
 
   .time-filter {

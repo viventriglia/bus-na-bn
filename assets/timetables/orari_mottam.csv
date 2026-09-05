@@ -1,0 +1,25 @@
+corsa_id;linea;direzione;ordine;fermata;orario;nota
+MOTTAM-A1;MOT.TAM;andata;1;Benevento, Terminal bus - via Mustilli;06:45;
+MOTTAM-A1;MOT.TAM;andata;2;Benevento, Bar 2000;06:50;
+MOTTAM-A1;MOT.TAM;andata;3;Napoli, Piazza Garibaldi;08:00;
+MOTTAM-A1;MOT.TAM;andata;4;Napoli, via De Pretis (Piazza Municipio);;
+MOTTAM-A2;MOT.TAM;andata;1;Benevento, Terminal bus - via Mustilli;07:55;
+MOTTAM-A2;MOT.TAM;andata;2;Benevento, Bar 2000;08:00;
+MOTTAM-A2;MOT.TAM;andata;3;Napoli, Piazza Garibaldi;09:15;
+MOTTAM-A2;MOT.TAM;andata;4;Napoli, via De Pretis (Piazza Municipio);;
+MOTTAM-A3;MOT.TAM;andata;1;Benevento, Terminal bus - via Mustilli;13:15;
+MOTTAM-A3;MOT.TAM;andata;2;Benevento, Bar 2000;13:20;
+MOTTAM-A3;MOT.TAM;andata;3;Napoli, Piazza Garibaldi;14:30;
+MOTTAM-A3;MOT.TAM;andata;4;Napoli, via De Pretis (Piazza Municipio);;
+MOTTAM-R1;MOT.TAM;ritorno;1;Napoli, via De Pretis (Piazza Municipio);14:15;
+MOTTAM-R1;MOT.TAM;ritorno;2;Napoli, Corso Meridionale;14:30;
+MOTTAM-R1;MOT.TAM;ritorno;3;Benevento, Bar 2000;15:45;
+MOTTAM-R1;MOT.TAM;ritorno;4;Benevento, Terminal bus - via Mustilli;15:50;
+MOTTAM-R2;MOT.TAM;ritorno;1;Napoli, via De Pretis (Piazza Municipio);16:00;
+MOTTAM-R2;MOT.TAM;ritorno;2;Napoli, Corso Meridionale;16:15;
+MOTTAM-R2;MOT.TAM;ritorno;3;Benevento, Bar 2000;17:30;
+MOTTAM-R2;MOT.TAM;ritorno;4;Benevento, Terminal bus - via Mustilli;17:35;
+MOTTAM-R3;MOT.TAM;ritorno;1;Napoli, via De Pretis (Piazza Municipio);17:05;
+MOTTAM-R3;MOT.TAM;ritorno;2;Napoli, Corso Meridionale;17:20;
+MOTTAM-R3;MOT.TAM;ritorno;3;Benevento, Bar 2000;18:20;
+MOTTAM-R3;MOT.TAM;ritorno;4;Benevento, Terminal bus - via Mustilli;18:25;
