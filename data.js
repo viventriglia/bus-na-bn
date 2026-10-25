@@ -192,13 +192,6 @@ window.BUS_SCHEDULE_DATA = {
       "AIR"
     ],
     [
-      "08:00",
-      "10:00",
-      "Benevento, Terminal bus - via Mustilli",
-      "Napoli Metropark - Terminal bus",
-      "AIR"
-    ],
-    [
       "08:30",
       "10:30",
       "Benevento, Terminal bus - via Mustilli",
