@@ -402,7 +402,7 @@ def markdown_report(report: dict) -> str:
         "## Aggiornamento", "",
         ("Dati e date aggiornati: il workflow puo' committare e pubblicare i file."
          if report.get("applied") else "File proposti salvati negli artefatti. Nessun dato pubblicato modificato."), "",
-        "Copertura attuale: solo AIR. EAV e MOT.TAM non sono controllate da questo workflow.", "",
+        "Questo report riguarda AIR. MOT.TAM ha un controllo separato nello stesso workflow; EAV non e' ancora monitorata.", "",
     ])
     return "\n".join(lines)
 

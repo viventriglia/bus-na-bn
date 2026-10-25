@@ -47,8 +47,8 @@ def read_trips() -> list[list[str]]:
         ]
 
 
-def read_mottam_journeys() -> list[dict[str, object]]:
-    with MOTTAM_PATH.open(newline="", encoding="utf-8-sig") as source:
+def read_mottam_journeys(path: Path | None = None) -> list[dict[str, object]]:
+    with (path or MOTTAM_PATH).open(newline="", encoding="utf-8-sig") as source:
         reader = csv.DictReader(source, delimiter=";")
         missing = [column for column in MOTTAM_COLUMNS if column not in (reader.fieldnames or [])]
 

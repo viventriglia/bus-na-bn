@@ -1,13 +1,14 @@
 CONTROLLO SETTIMANALE DEGLI ORARI
 
-Copertura iniziale: AIR, linea 01-BN feriale, entrambi i sensi tra
-Benevento Terminal Mustilli e Napoli Metropark. EAV e MOT.TAM non sono
-ancora monitorate: occorrono le pagine ufficiali e parser dedicati.
+Copertura: AIR, linea 01-BN feriale, entrambi i sensi tra Benevento Terminal
+Mustilli e Napoli Metropark; MOT.TAM, tutte le corse Benevento-Napoli con
+le fermate Mustilli, Bar 2000, Piazza Garibaldi, De Pretis e Corso Meridionale.
+EAV non e' ancora monitorata: occorrono la pagina ufficiale e un parser dedicato.
 
 COME FUNZIONA
 
 1. Ogni sabato alle 01:23 nel fuso Europe/Rome (ora italiana, anche legale),
-   oppure manualmente da Actions > Aggiorna orari AIR > Run workflow.
+   oppure manualmente da Actions > Aggiorna orari AIR e MOT.TAM > Run workflow.
 2. Si apre https://aircampania.it/linee-e-orari/ e si individua il link
    tramite il testo 01-BN + Benevento + Napoli + feriale. Mese, anno e
    nome del PDF non sono codificati nel workflow. I link festivi sono esclusi.
@@ -27,17 +28,44 @@ COME FUNZIONA
 6. Se ci sono differenze valide, --apply aggiorna CSV e data.js. Ogni controllo
    online riuscito aggiorna anche la data di conferma AIR in line_updates.json,
    pure quando gli orari sono invariati. La data di modifica avanza solo
-   quando cambiano le corse; EAV e MOT.TAM mantengono la data di caricamento.
-   L'Action committa esclusivamente quei tre file e fa push sul branch predefinito.
+   quando cambiano le corse; EAV mantiene la data di caricamento.
+   MOT.TAM aggiorna allo stesso modo il proprio CSV e la propria conferma.
+   L'Action committa esclusivamente i due CSV, line_updates.json e data.js.
    Le sostituzioni dei file sono atomiche; un errore di scrittura ripristina
    i dati precedenti. Un push in conflitto fallisce invece di forzare il branch.
 7. Il workflow chiama esplicitamente deploy-pages.yml per pubblicare i dati
    aggiornati su GitHub Pages. Non dipende dal trigger push del commit bot,
    che GitHub normalmente non esegue. Un avvio manuale ripubblica il sito
    anche senza differenze, per consentire di riprovare un deploy fallito.
-8. L'artefatto air-timetable-review
-   contiene PDF originale, report leggibile, JSON con colonne/codici di
-   validita' originali, CSV, data.js e line_updates.json aggiornati. Conservazione: 30 giorni.
+8. L'artefatto timetable-reports conserva le cartelle air-check e mottam-check:
+   fonti originali (PDF/HTML), report leggibili, JSON di estrazione, CSV,
+   data.js e line_updates.json proposti. Conservazione: 30 giorni.
+
+PARSER MOT.TAM
+
+La home https://www.mottam.com/ contiene ORARI NAPOLI, attualmente un'ancora
+sulla stessa pagina. Il link viene risolto a ogni controllo anche se cambia
+in una pagina separata, purche' resti sul dominio ufficiale HTTPS. Senza
+link si accetta la home solo se contiene una tabella completa e univoca.
+
+La fonte e' HTML esportato da Word, con codifica windows-1252. Il parser
+legge le celle ANDATA/RITORNO, associa ogni intestazione CORSA al relativo
+testo e riconosce tutti gli orari accanto alle fermate previste. Supporta
+aggiunte e rimozioni di colonne, varianti h:mm/h.mm e normali cambi grafici.
+Un cambio di fermata, una cella mancante o un testo non riconosciuto richiedono
+verifica manuale e non producono dati parziali o una falsa conferma.
+
+Gli ID derivano dai numeri di corsa pubblicati. Si confrontano tutte le fermate
+di ogni corsa, non solo i capolinea. Il riepilogo delle partenze, le tariffe e
+le altre linee della home non sono usati per costruire le corse Napoli.
+Via De Pretis in andata rimane senza orario, come nella fonte; non si aggiungono
+orari alle altre fermate della mappa. Le note rimosse dal sito restano assenti.
+
+I controlli AIR e MOT.TAM sono sequenziali per evitare commit concorrenti su
+data.js e line_updates.json, ma indipendenti negli esiti. Se una fonte fallisce,
+l'altra puo' essere aggiornata e pubblicata. Il job source-status segnala
+comunque la run fallita per rendere visibile la fonte non verificata; la sua
+data di conferma resta ferma. Se entrambe falliscono nessun dato viene aggiornato.
 
 ESITI
 
@@ -62,9 +90,9 @@ Tutte le altre differenze vengono segnalate, incluse rimozioni.
 
 PUBBLICAZIONE AUTOMATICA
 
-La schedulazione esegue python scripts/check_air_timetables.py --apply.
-Le righe EAV e le corse MOT.TAM vengono preservate. In caso di errore del
-parser non si procede a commit o deploy. I report rimangono consultabili.
+La schedulazione esegue entrambi i parser con --apply. Ciascuno preserva i dati
+delle altre linee. Un errore blocca l'aggiornamento di quella fonte; i report
+rimangono consultabili. Gli aggiornamenti validi dell'altra fonte proseguono.
 
 Il workflow Pubblica sito si attiva anche sui push manuali che modificano
 i file del sito. Pubblica solo index.html, app.js, data.js, styles.css e
@@ -75,14 +103,17 @@ INSTALLAZIONE E PROVA LOCALE
 python -m pip install -r scripts/requirements-timetables.txt
 python -m unittest discover -s tests -v
 python scripts/check_air_timetables.py
+python scripts/check_mottam_timetables.py
 
 Senza --apply vengono prodotti solo report e proposte. Con --apply vengono
 aggiornati anche i file sorgente, ma commit e deploy sono compiti del workflow.
 Una prova con --pdf locale non avanza la data di conferma online.
+Per MOT.TAM l'equivalente e' --html percorso/pagina.html.
 
 Le date per linea sono in assets/timetables/line_updates.json e vengono
 incorporate in data.js: funzionano anche aprendo index.html con file://.
-EAV e MOT.TAM partono dal caricamento del 5 settembre 2026 (commit bd82b89).
+EAV e MOT.TAM partono dal caricamento del 5 settembre 2026 (commit bd82b89);
+la conferma MOT.TAM avanza dal primo controllo online riuscito.
 Per caricare manualmente nuovi orari aggiornare updated_at della relativa
 linea, con data ISO e fuso orario, poi rigenerare data.js.
 

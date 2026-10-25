@@ -1,4 +1,4 @@
-name: Aggiorna orari AIR
+name: Aggiorna orari AIR e MOT.TAM
 
 on:
   schedule:
@@ -22,6 +22,8 @@ jobs:
     timeout-minutes: 10
     outputs:
       changed: ${{ steps.commit.outputs.changed }}
+      air_outcome: ${{ steps.air.outcome }}
+      mottam_outcome: ${{ steps.mottam.outcome }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,7 +39,13 @@ jobs:
       - name: Test parser e regole
         run: python -m unittest discover -s tests -v
       - name: Trova il PDF attuale e confronta gli orari
+        id: air
+        continue-on-error: true
         run: python scripts/check_air_timetables.py --apply
+      - name: Controlla gli orari MOT.TAM dalla pagina ufficiale
+        id: mottam
+        continue-on-error: true
+        run: python scripts/check_mottam_timetables.py --apply
       - name: Verifica coerenza dei dati generati
         run: |
           python scripts/generate_data.py
@@ -47,13 +55,13 @@ jobs:
         env:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          git add -- assets/timetables/orari_eav_air.csv assets/timetables/line_updates.json data.js
+          git add -- assets/timetables/orari_eav_air.csv assets/timetables/orari_mottam.csv assets/timetables/line_updates.json data.js
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore: aggiorna o conferma gli orari AIR"
+            git commit -m "chore: aggiorna o conferma gli orari AIR e MOT.TAM"
             git push origin "HEAD:$DEFAULT_BRANCH"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
@@ -64,12 +72,17 @@ jobs:
           if [ -f tmp/air-check/report.md ]; then
             cat tmp/air-check/report.md >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f tmp/mottam-check/report.md ]; then
+            cat tmp/mottam-check/report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Salva fonte, report e file proposti
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: air-timetable-review
-          path: tmp/air-check/
+          name: timetable-reports
+          path: |
+            tmp/air-check/
+            tmp/mottam-check/
           if-no-files-found: warn
           retention-days: 30
 
@@ -81,3 +94,18 @@ jobs:
       pages: write
       id-token: write
     uses: ./.github/workflows/deploy-pages.yml
+
+  source-status:
+    needs: [check-air, publish]
+    if: >-
+      always() && needs.check-air.result == 'success' &&
+      (needs.check-air.outputs.air_outcome != 'success' || needs.check-air.outputs.mottam_outcome != 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Segnala le fonti non verificate
+        env:
+          AIR_OUTCOME: ${{ needs.check-air.outputs.air_outcome }}
+          MOTTAM_OUTCOME: ${{ needs.check-air.outputs.mottam_outcome }}
+        run: |
+          echo "::error::Esito controllo AIR: $AIR_OUTCOME; MOT.TAM: $MOTTAM_OUTCOME. Consultare i report."
+          exit 1
