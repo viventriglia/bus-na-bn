@@ -537,7 +537,7 @@ window.BUS_SCHEDULE_DATA = {
   "lineUpdates": {
     "AIR": {
       "updated_at": "2026-10-25T19:50:55+00:00",
-      "checked_at": "2026-10-25T20:47:20.234402+00:00"
+      "checked_at": "2026-10-25T20:53:54.942250+00:00"
     },
     "EAV": {
       "updated_at": "2026-09-05T16:47:58+02:00",
@@ -545,7 +545,7 @@ window.BUS_SCHEDULE_DATA = {
     },
     "MOT.TAM": {
       "updated_at": "2026-09-05T16:47:58+02:00",
-      "checked_at": "2026-10-25T20:47:24.516823+00:00"
+      "checked_at": "2026-10-25T20:53:59.079375+00:00"
     }
   }
 };
