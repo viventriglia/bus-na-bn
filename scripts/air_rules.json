@@ -1,0 +1,23 @@
+{
+  "index_url": "https://aircampania.it/linee-e-orari/",
+  "ignored_trips": [
+    {
+      "direction": "benevento_napoli",
+      "departure": "08:30",
+      "arrival": "10:00",
+      "reason": "Esclusa su richiesta del 5 settembre 2026: aggiungere solo 08:30-10:30."
+    },
+    {
+      "direction": "napoli_benevento",
+      "departure": "11:00",
+      "arrival": "12:30",
+      "reason": "Non inclusa tra le aggiunte autorizzate il 5 settembre 2026."
+    },
+    {
+      "direction": "napoli_benevento",
+      "departure": "20:30",
+      "arrival": "22:00",
+      "reason": "Non inclusa tra le aggiunte autorizzate il 5 settembre 2026."
+    }
+  ]
+}

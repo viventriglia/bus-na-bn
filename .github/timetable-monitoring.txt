@@ -1,0 +1,95 @@
+CONTROLLO SETTIMANALE DEGLI ORARI
+
+Copertura iniziale: AIR, linea 01-BN feriale, entrambi i sensi tra
+Benevento Terminal Mustilli e Napoli Metropark. EAV e MOT.TAM non sono
+ancora monitorate: occorrono le pagine ufficiali e parser dedicati.
+
+COME FUNZIONA
+
+1. Ogni domenica alle 04:23 UTC (05:23 in inverno, 06:23 in estate),
+   oppure manualmente da Actions > Aggiorna orari AIR > Run workflow.
+2. Si apre https://aircampania.it/linee-e-orari/ e si individua il link
+   tramite il testo 01-BN + Benevento + Napoli + feriale. Mese, anno e
+   nome del PDF non sono codificati nel workflow. I link festivi sono esclusi.
+   Zero link o piu' link distinti producono un errore: non si usa una copia
+   vecchia fingendo che sia ancora attuale.
+3. pdfplumber legge la griglia del PDF. Si accoppiano le celle della stessa
+   colonna nelle due righe dei capolinea. Le colonne senza entrambi gli
+   orari sono corse parziali e vengono elencate nel report, non inventate.
+4. Si verificano tratta, giorni feriali, data di decorrenza, intestazioni,
+   colonne, formato delle ore e durata. Un documento futuro, una scansione
+   senza testo o una struttura sconosciuta richiedono revisione manuale.
+   Errori nelle fermate intermedie sono segnalati: quei dati non alimentano
+   il sito e non vengono corretti automaticamente.
+5. Le corse complete vengono deduplicate e confrontate col CSV del sito.
+   Il confronto e' sui dati, non sull'URL o sui byte del PDF. Una semplice
+   ripubblicazione o una modifica ai metadati non conta come cambio orario.
+6. Se ci sono differenze valide, --apply aggiorna CSV e data.js. L'Action
+   committa esclusivamente quei due file e fa push sul branch predefinito.
+   Le sostituzioni dei file sono atomiche; un errore di scrittura ripristina
+   i dati precedenti. Un push in conflitto fallisce invece di forzare il branch.
+7. Il workflow chiama esplicitamente deploy-pages.yml per pubblicare i dati
+   aggiornati su GitHub Pages. Non dipende dal trigger push del commit bot,
+   che GitHub normalmente non esegue. Un avvio manuale ripubblica il sito
+   anche senza differenze, per consentire di riprovare un deploy fallito.
+8. L'artefatto air-timetable-review
+   contiene PDF originale, report leggibile, JSON con colonne/codici di
+   validita' originali, CSV aggiornato e data.js aggiornato. Conservazione: 30 giorni.
+
+ESITI
+
+Exit 0: controllo riuscito, sia senza differenze sia dopo --apply.
+Exit 1: controllo non riuscito (fonte non disponibile o parser non affidabile).
+Exit 2 con --fail-on-changes: variazioni da revisionare; l'Action risulta
+fallita intenzionalmente per renderle visibili. Consultare il riepilogo
+della run per distinguere cambiamenti ed errori. Le notifiche email
+dipendono dalle preferenze GitHub Actions dell'utente.
+
+Il report non afferma che l'intero documento e' identico: mantiene i codici
+di validita' ma, secondo la scelta del sito, non calcola stagioni, giorni
+scolastici o festivita'. Non sostituisce gli avvisi temporanei del gestore.
+
+SCELTE MANUALI
+
+scripts/air_rules.json conserva le tre coppie escluse su richiesta:
+BN -> NA 08:30-10:00; NA -> BN 11:00-12:30 e 20:30-22:00.
+Sono esclusioni esatte: un nuovo arrivo diverso torna nel report.
+La corsa NA -> BN 16:30-18:30 viene deduplicata se ripetuta.
+Tutte le altre differenze vengono segnalate, incluse rimozioni.
+
+PUBBLICAZIONE AUTOMATICA
+
+La schedulazione esegue python scripts/check_air_timetables.py --apply.
+Le righe EAV e le corse MOT.TAM vengono preservate. In caso di errore del
+parser non si procede a commit o deploy. I report rimangono consultabili.
+
+Il workflow Pubblica sito si attiva anche sui push manuali che modificano
+i file del sito. Pubblica solo index.html, app.js, data.js, styles.css e
+assets/: script, test, PDF scaricati e report non vengono esposti sul sito.
+
+INSTALLAZIONE E PROVA LOCALE
+
+python -m pip install -r scripts/requirements-timetables.txt
+python -m unittest discover -s tests -v
+python scripts/check_air_timetables.py
+
+Senza --apply vengono prodotti solo report e proposte. Con --apply vengono
+aggiornati anche i due file sorgente, ma commit e deploy sono compiti del workflow.
+
+Per una prova riproducibile senza rete:
+python scripts/check_air_timetables.py --pdf percorso/BN-01.pdf --as-of 2026-10-25
+
+L'output predefinito e' tmp/air-check/, escluso da Git.
+
+ATTIVAZIONE SU GITHUB
+
+Il workflow va committato e pubblicato sul branch predefinito del repository;
+poi si puo' lanciare manualmente per il primo controllo. Non servono chiavi
+API o token personalizzati: si usa GITHUB_TOKEN, con contents:write per il
+job di aggiornamento e pages:write/id-token:write per il deploy. La sorgente
+Pages del repository deve essere impostata su GitHub Actions (build_type=workflow).
+
+GitHub puo' ritardare i workflow schedulati. Nei repository pubblici li
+disabilita dopo 60 giorni di inattivita': controllare periodicamente le run
+e riattivarli se necessario. Fonte:
+https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
