@@ -116,7 +116,7 @@ class ProposalTests(unittest.TestCase):
             output = folder / "proposal"
             output.mkdir()
             originals = {}
-            for name in ("orari_eav_air.csv", "data.js"):
+            for name in ("orari_eav_air.csv", "data.js", "line_updates.json"):
                 target = folder / name
                 target.write_bytes(b"old data")
                 originals[target] = b"old data"
@@ -138,7 +138,7 @@ class ProposalTests(unittest.TestCase):
             output = folder / "proposal"
             output.mkdir()
             originals = {}
-            for name in ("orari_eav_air.csv", "data.js"):
+            for name in ("orari_eav_air.csv", "data.js", "line_updates.json"):
                 target = folder / name
                 target.write_bytes(b"original")
                 originals[target] = b"original"
@@ -190,6 +190,69 @@ class ProposalTests(unittest.TestCase):
         report = air.markdown_report({"status": "error", "error": "PDF ambiguo"})
         self.assertIn("non riuscito", report)
         self.assertIn("PDF ambiguo", report)
+
+
+class MetadataTests(unittest.TestCase):
+    def setUp(self):
+        self.previous = {
+            "AIR": {"updated_at": "2026-10-25T19:50:55+00:00", "checked_at": "2026-10-25T19:50:55+00:00"},
+            "EAV": {"updated_at": "2026-09-05T16:47:58+02:00", "checked_at": None},
+            "MOT.TAM": {"updated_at": "2026-09-05T16:47:58+02:00", "checked_at": None},
+        }
+        self.timestamp = "2026-10-31T00:23:00+00:00"
+
+    def test_unchanged_live_check_updates_confirmation_only(self):
+        result = air.update_air_metadata(self.previous, self.timestamp, changed=False, live_check=True)
+        self.assertEqual(result["AIR"]["checked_at"], self.timestamp)
+        self.assertEqual(result["AIR"]["updated_at"], self.previous["AIR"]["updated_at"])
+        self.assertEqual(result["EAV"], self.previous["EAV"])
+        self.assertEqual(result["MOT.TAM"], self.previous["MOT.TAM"])
+        self.assertNotEqual(self.previous["AIR"]["checked_at"], self.timestamp)
+
+    def test_actual_change_updates_both_dates(self):
+        result = air.update_air_metadata(self.previous, self.timestamp, changed=True, live_check=True)
+        self.assertEqual(result["AIR"], {"updated_at": self.timestamp, "checked_at": self.timestamp})
+
+    def test_local_pdf_does_not_claim_online_confirmation(self):
+        result = air.update_air_metadata(self.previous, self.timestamp, changed=False, live_check=False)
+        self.assertEqual(result, self.previous)
+
+    def test_metadata_is_embedded_in_generated_javascript(self):
+        text = air.generate_data.schedule_js([], [], self.previous)
+        payload = json.loads(text.split(" = ", 1)[1].removesuffix(";\n"))
+        self.assertEqual(payload["lineUpdates"], self.previous)
+
+    def test_live_unchanged_run_applies_confirmation_and_preserves_other_lines(self):
+        tables = [air.extract_table(example_table(), 1), air.extract_table(example_table(True), 1)]
+        trips, _ = air.apply_rules(tables, {"ignored_trips": []})
+        with tempfile.TemporaryDirectory() as temporary:
+            folder = Path(temporary)
+            current = folder / "orari_eav_air.csv"
+            javascript = folder / "data.js"
+            metadata = folder / "line_updates.json"
+            with patch.object(air.generate_data, "read_mottam_journeys", return_value=[]):
+                air.prepare_proposal([], trips, folder, self.previous)
+            original_csv = current.read_bytes()
+            with patch.object(air, "CURRENT_CSV", current), \
+                 patch.object(air.generate_data, "OUTPUT_PATH", javascript), \
+                 patch.object(air.generate_data, "LINE_UPDATES_PATH", metadata), \
+                 patch.object(air.generate_data, "read_mottam_journeys", return_value=[]), \
+                 patch.object(air, "download", side_effect=[(b"html", "https://aircampania.it/"), (b"%PDF-test", "https://aircampania.it/current.pdf")]), \
+                 patch.object(air, "discover_pdf", return_value="https://aircampania.it/current.pdf"), \
+                 patch.object(air, "parse_pdf", return_value=(tables, date(2026, 9, 15))), \
+                 patch("sys.stdout", new=io.StringIO()):
+                result = air.main(["--output-dir", str(folder / "report"), "--as-of", "2026-10-25", "--apply"])
+            self.assertEqual(result, 0)
+            report = json.loads((folder / "report" / "report.json").read_text(encoding="utf-8"))
+            self.assertEqual(report["status"], "unchanged")
+            self.assertTrue(report["applied"])
+            self.assertTrue(report["metadata_updated"])
+            final_metadata = json.loads(metadata.read_text(encoding="utf-8"))
+            self.assertEqual(final_metadata["AIR"]["checked_at"], report["checked_at"])
+            self.assertEqual(final_metadata["AIR"]["updated_at"], self.previous["AIR"]["updated_at"])
+            self.assertEqual(final_metadata["EAV"], self.previous["EAV"])
+            self.assertEqual(final_metadata["MOT.TAM"], self.previous["MOT.TAM"])
+            self.assertEqual(current.read_bytes(), original_csv)
 
 
 class DocumentTests(unittest.TestCase):

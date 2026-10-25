@@ -533,5 +533,19 @@ window.BUS_SCHEDULE_DATA = {
         }
       ]
     }
-  ]
+  ],
+  "lineUpdates": {
+    "AIR": {
+      "updated_at": "2026-10-25T19:50:55+00:00",
+      "checked_at": "2026-10-25T19:50:55+00:00"
+    },
+    "EAV": {
+      "updated_at": "2026-09-05T16:47:58+02:00",
+      "checked_at": null
+    },
+    "MOT.TAM": {
+      "updated_at": "2026-09-05T16:47:58+02:00",
+      "checked_at": null
+    }
+  }
 };

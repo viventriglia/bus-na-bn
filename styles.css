@@ -279,6 +279,22 @@ h2 {
   padding: 16px;
 }
 
+.line-updates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 12px 0 0;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  color: var(--muted);
+  font-size: 0.73rem;
+  line-height: 1.5;
+}
+
+.line-updates[hidden] {
+  display: none;
+}
+
 .search-panel-header {
   display: flex;
   align-items: center;

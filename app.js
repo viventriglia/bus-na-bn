@@ -51,6 +51,7 @@ const els = {
   results: document.querySelector("#results"),
   summary: document.querySelector("#resultsSummary"),
   status: document.querySelector("#dataStatus"),
+  lineUpdates: document.querySelector("#lineUpdates"),
 };
 
 init();
@@ -72,11 +73,50 @@ async function init() {
     updateResults({ replaceUrl: true });
 
     els.status.textContent = `${state.trips.length} corse`;
+    renderLineUpdates();
   } catch (error) {
     console.error(error);
     els.status.textContent = "Errore dati";
     renderError("Impossibile caricare gli orari.", "Rigenera data.js dal CSV oppure avvia un server statico locale.");
   }
+}
+
+function renderLineUpdates() {
+  const updates = window.BUS_SCHEDULE_DATA?.lineUpdates ?? {};
+  const formatter = new Intl.DateTimeFormat("it-IT", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "Europe/Rome",
+  });
+  const fragments = [];
+
+  for (const line of uniqueSorted(state.trips.map((trip) => trip.line))) {
+    const update = updates[line];
+    const timestamp = update?.checked_at || update?.updated_at;
+    const date = new Date(timestamp || "");
+    if (Number.isNaN(date.getTime())) {
+      continue;
+    }
+
+    const entry = document.createElement("span");
+    const name = document.createElement("strong");
+    name.textContent = line;
+    const time = document.createElement("time");
+    time.dateTime = timestamp;
+    time.textContent = formatter.format(date);
+    entry.append(name, update.checked_at ? ": confermati il " : ": caricati il ", time);
+    if (update.checked_at && update.updated_at) {
+      const updatedDate = new Date(update.updated_at);
+      if (!Number.isNaN(updatedDate.getTime())) {
+        entry.title = `Ultima modifica degli orari: ${formatter.format(updatedDate)}`;
+      }
+    }
+    fragments.push(entry);
+  }
+
+  els.lineUpdates.replaceChildren(...fragments);
+  els.lineUpdates.hidden = fragments.length === 0;
 }
 
 function bindEvents() {

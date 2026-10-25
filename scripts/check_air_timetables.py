@@ -308,7 +308,7 @@ def read_current(path: Path) -> tuple[list[list[str]], list[Trip]]:
     return rows, current
 
 
-def prepare_proposal(rows: list[list[str]], trips: list[Trip], output: Path) -> None:
+def prepare_proposal(rows: list[list[str]], trips: list[Trip], output: Path, line_updates: dict | None = None) -> None:
     # Keep every non-AIR row byte-for-byte in content and relative order.
     proposed_rows = [row for row in rows if row[-1] != "AIR"] + [trip.csv_row() for trip in trips]
     proposed_csv = output / "orari_eav_air.csv"
@@ -316,15 +316,24 @@ def prepare_proposal(rows: list[list[str]], trips: list[Trip], output: Path) -> 
         writer = csv.writer(stream, delimiter=";", lineterminator="\n")
         writer.writerow(generate_data.COLUMNS)
         writer.writerows(proposed_rows)
-    payload = {
-        "columns": generate_data.COLUMNS,
-        "trips": proposed_rows,
-        "journeys": generate_data.read_mottam_journeys(),
-    }
+    if line_updates is None:
+        line_updates = generate_data.read_line_updates()
     (output / "data.js").write_text(
-        '"use strict";\n\nwindow.BUS_SCHEDULE_DATA = '
-        + json.dumps(payload, ensure_ascii=False, indent=2) + ";\n", encoding="utf-8"
+        generate_data.schedule_js(proposed_rows, generate_data.read_mottam_journeys(), line_updates),
+        encoding="utf-8",
     )
+    (output / generate_data.LINE_UPDATES_PATH.name).write_text(
+        json.dumps(line_updates, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+
+def update_air_metadata(previous: dict, timestamp: str, changed: bool, live_check: bool) -> dict:
+    result = {line: dict(entry) for line, entry in previous.items()}
+    if changed:
+        result["AIR"]["updated_at"] = timestamp
+    if live_check:
+        result["AIR"]["checked_at"] = timestamp
+    return result
 
 
 def replace_bytes(path: Path, content: bytes) -> None:
@@ -341,7 +350,7 @@ def replace_bytes(path: Path, content: bytes) -> None:
 
 
 def apply_proposal(output: Path, originals: dict[Path, bytes]) -> None:
-    """Apply the validated pair; roll back if the second replacement fails."""
+    """Apply validated files; roll back earlier replacements on failure."""
     for target, original in originals.items():
         if target.read_bytes() != original:
             raise ScheduleError(f"File modificato durante il controllo: {target.name}")
@@ -391,7 +400,7 @@ def markdown_report(report: dict) -> str:
     lines.extend([
         "", f"Colonne senza entrambi i capolinea: {incomplete} (dettaglio nel JSON).", "",
         "## Aggiornamento", "",
-        ("CSV e data.js aggiornati: il workflow puo' committare e pubblicare i nuovi dati."
+        ("Dati e date aggiornati: il workflow puo' committare e pubblicare i file."
          if report.get("applied") else "File proposti salvati negli artefatti. Nessun dato pubblicato modificato."), "",
         "Copertura attuale: solo AIR. EAV e MOT.TAM non sono controllate da questo workflow.", "",
     ])
@@ -417,7 +426,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("La directory di output deve essere separata dai dati pubblicati")
     output.mkdir(parents=True, exist_ok=True)
     # Never leave last run's proposals next to this run's error report.
-    for filename in ("orari_eav_air.csv", "data.js"):
+    for filename in ("orari_eav_air.csv", "data.js", generate_data.LINE_UPDATES_PATH.name):
         (output / filename).unlink(missing_ok=True)
     if args.pdf is None or args.pdf.resolve() != output / "source.pdf":
         (output / "source.pdf").unlink(missing_ok=True)
@@ -441,10 +450,15 @@ def main(argv: list[str] | None = None) -> int:
         originals = {
             CURRENT_CSV: CURRENT_CSV.read_bytes(),
             generate_data.OUTPUT_PATH: generate_data.OUTPUT_PATH.read_bytes(),
+            generate_data.LINE_UPDATES_PATH: generate_data.LINE_UPDATES_PATH.read_bytes(),
         }
         rows, current = read_current(CURRENT_CSV)
         added = sorted(set(proposed) - set(current))
         removed = sorted(set(current) - set(proposed))
+        previous_metadata = generate_data.read_line_updates()
+        line_updates = update_air_metadata(
+            previous_metadata, report["checked_at"], bool(added or removed), args.pdf is None
+        )
         report.update({
             "status": "changes" if added or removed else "unchanged",
             "index_url": index_url,
@@ -457,15 +471,16 @@ def main(argv: list[str] | None = None) -> int:
             "exclusions": exclusions,
             "source_tables": tables,
             "proposed_count": len(proposed),
+            "metadata_updated": line_updates != previous_metadata,
         })
-        prepare_proposal(rows, proposed, output)
-        if args.apply and (added or removed):
+        prepare_proposal(rows, proposed, output, line_updates)
+        if args.apply and (added or removed or line_updates != previous_metadata):
             apply_proposal(output, originals)
             report["applied"] = True
     except Exception as error:
         report["status"] = "error"
         report["error"] = f"{type(error).__name__}: {error}"
-        for filename in ("orari_eav_air.csv", "data.js"):
+        for filename in ("orari_eav_air.csv", "data.js", generate_data.LINE_UPDATES_PATH.name):
             (output / filename).unlink(missing_ok=True)
     (output / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     summary = markdown_report(report)

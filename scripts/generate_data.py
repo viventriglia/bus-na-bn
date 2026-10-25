@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+from datetime import datetime
 from pathlib import Path
 
 
@@ -9,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TIMETABLES_PATH = ROOT / "assets" / "timetables"
 CSV_PATH = TIMETABLES_PATH / "orari_eav_air.csv"
 MOTTAM_PATH = TIMETABLES_PATH / "orari_mottam.csv"
+LINE_UPDATES_PATH = TIMETABLES_PATH / "line_updates.json"
 OUTPUT_PATH = ROOT / "data.js"
 
 COLUMNS = [
@@ -95,18 +97,36 @@ def read_mottam_journeys() -> list[dict[str, object]]:
     return result
 
 
-def main() -> None:
-    trips = read_trips()
-    journeys = read_mottam_journeys()
+def read_line_updates() -> dict[str, dict[str, str | None]]:
+    updates = json.loads(LINE_UPDATES_PATH.read_text(encoding="utf-8"))
+    for line in ("AIR", "EAV", "MOT.TAM"):
+        entry = updates[line]
+        for key in ("updated_at", "checked_at"):
+            value = entry[key]
+            if value is None and key == "checked_at":
+                continue
+            if not isinstance(value, str) or datetime.fromisoformat(value).tzinfo is None:
+                raise ValueError(f"Data {key} non valida per {line}")
+    return updates
 
+
+def schedule_js(trips: list[list[str]], journeys: list[dict], line_updates: dict) -> str:
     payload = {
         "columns": COLUMNS,
         "trips": trips,
         "journeys": journeys,
+        "lineUpdates": line_updates,
     }
     js = '"use strict";\n\nwindow.BUS_SCHEDULE_DATA = '
     js += json.dumps(payload, ensure_ascii=False, indent=2)
     js += ";\n"
+    return js
+
+
+def main() -> None:
+    trips = read_trips()
+    journeys = read_mottam_journeys()
+    js = schedule_js(trips, journeys, read_line_updates())
 
     OUTPUT_PATH.write_text(js, encoding="utf-8")
     print(f"Generato {OUTPUT_PATH.name}: {len(trips) + len(journeys)} corse")

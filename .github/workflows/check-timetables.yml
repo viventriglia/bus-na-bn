@@ -2,8 +2,8 @@ name: Aggiorna orari AIR
 
 on:
   schedule:
-    # Domenica: 04:23 UTC, quindi prima dell'inizio della settimana lavorativa.
-    - cron: '23 4 * * 0'
+    - cron: '23 1 * * 6'
+      timezone: Europe/Rome
   workflow_dispatch:
 
 permissions:
@@ -47,13 +47,13 @@ jobs:
         env:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          git add -- assets/timetables/orari_eav_air.csv data.js
+          git add -- assets/timetables/orari_eav_air.csv assets/timetables/line_updates.json data.js
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore: aggiorna automaticamente gli orari AIR"
+            git commit -m "chore: aggiorna o conferma gli orari AIR"
             git push origin "HEAD:$DEFAULT_BRANCH"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi

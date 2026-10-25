@@ -6,7 +6,7 @@ ancora monitorate: occorrono le pagine ufficiali e parser dedicati.
 
 COME FUNZIONA
 
-1. Ogni domenica alle 04:23 UTC (05:23 in inverno, 06:23 in estate),
+1. Ogni sabato alle 01:23 nel fuso Europe/Rome (ora italiana, anche legale),
    oppure manualmente da Actions > Aggiorna orari AIR > Run workflow.
 2. Si apre https://aircampania.it/linee-e-orari/ e si individua il link
    tramite il testo 01-BN + Benevento + Napoli + feriale. Mese, anno e
@@ -24,8 +24,11 @@ COME FUNZIONA
 5. Le corse complete vengono deduplicate e confrontate col CSV del sito.
    Il confronto e' sui dati, non sull'URL o sui byte del PDF. Una semplice
    ripubblicazione o una modifica ai metadati non conta come cambio orario.
-6. Se ci sono differenze valide, --apply aggiorna CSV e data.js. L'Action
-   committa esclusivamente quei due file e fa push sul branch predefinito.
+6. Se ci sono differenze valide, --apply aggiorna CSV e data.js. Ogni controllo
+   online riuscito aggiorna anche la data di conferma AIR in line_updates.json,
+   pure quando gli orari sono invariati. La data di modifica avanza solo
+   quando cambiano le corse; EAV e MOT.TAM mantengono la data di caricamento.
+   L'Action committa esclusivamente quei tre file e fa push sul branch predefinito.
    Le sostituzioni dei file sono atomiche; un errore di scrittura ripristina
    i dati precedenti. Un push in conflitto fallisce invece di forzare il branch.
 7. Il workflow chiama esplicitamente deploy-pages.yml per pubblicare i dati
@@ -34,7 +37,7 @@ COME FUNZIONA
    anche senza differenze, per consentire di riprovare un deploy fallito.
 8. L'artefatto air-timetable-review
    contiene PDF originale, report leggibile, JSON con colonne/codici di
-   validita' originali, CSV aggiornato e data.js aggiornato. Conservazione: 30 giorni.
+   validita' originali, CSV, data.js e line_updates.json aggiornati. Conservazione: 30 giorni.
 
 ESITI
 
@@ -74,7 +77,14 @@ python -m unittest discover -s tests -v
 python scripts/check_air_timetables.py
 
 Senza --apply vengono prodotti solo report e proposte. Con --apply vengono
-aggiornati anche i due file sorgente, ma commit e deploy sono compiti del workflow.
+aggiornati anche i file sorgente, ma commit e deploy sono compiti del workflow.
+Una prova con --pdf locale non avanza la data di conferma online.
+
+Le date per linea sono in assets/timetables/line_updates.json e vengono
+incorporate in data.js: funzionano anche aprendo index.html con file://.
+EAV e MOT.TAM partono dal caricamento del 5 settembre 2026 (commit bd82b89).
+Per caricare manualmente nuovi orari aggiornare updated_at della relativa
+linea, con data ISO e fuso orario, poi rigenerare data.js.
 
 Per una prova riproducibile senza rete:
 python scripts/check_air_timetables.py --pdf percorso/BN-01.pdf --as-of 2026-10-25
