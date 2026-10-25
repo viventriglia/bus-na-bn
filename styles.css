@@ -523,12 +523,18 @@ button:focus-visible {
   white-space: nowrap;
 }
 
-.route .journey-stops {
+.route .journey-stops,
+.route .service-note {
   display: block;
   margin-top: 8px;
   color: var(--muted);
   font-size: 0.78rem;
   line-height: 1.35;
+}
+
+.bus-category {
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .trip-aside {

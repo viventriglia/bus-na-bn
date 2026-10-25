@@ -2,8 +2,9 @@ CONTROLLO SETTIMANALE DEGLI ORARI
 
 Copertura: AIR, linea 01-BN feriale, entrambi i sensi tra Benevento Terminal
 Mustilli e Napoli Metropark; MOT.TAM, tutte le corse Benevento-Napoli con
-le fermate Mustilli, Bar 2000, Piazza Garibaldi, De Pretis e Corso Meridionale.
-EAV non e' ancora monitorata: occorrono la pagina ufficiale e un parser dedicato.
+le fermate Mustilli, Bar 2000, Piazza Garibaldi, De Pretis e Corso Meridionale;
+EAV, autobus sostitutivi tra Benevento Centrale RFI e Napoli Centrale RFI,
+entrambe le categorie BUS 1 e BUS 2 (veloce).
 
 COME FUNZIONA
 
@@ -28,8 +29,8 @@ COME FUNZIONA
 6. Se ci sono differenze valide, --apply aggiorna CSV e data.js. Ogni controllo
    online riuscito aggiorna anche la data di conferma AIR in line_updates.json,
    pure quando gli orari sono invariati. La data di modifica avanza solo
-   quando cambiano le corse; EAV mantiene la data di caricamento.
-   MOT.TAM aggiorna allo stesso modo il proprio CSV e la propria conferma.
+   quando cambiano le corse. MOT.TAM ed EAV aggiornano allo stesso modo
+   i propri dati e le rispettive conferme.
    L'Action committa esclusivamente i due CSV, line_updates.json e data.js.
    Le sostituzioni dei file sono atomiche; un errore di scrittura ripristina
    i dati precedenti. Un push in conflitto fallisce invece di forzare il branch.
@@ -37,7 +38,7 @@ COME FUNZIONA
    aggiornati su GitHub Pages. Non dipende dal trigger push del commit bot,
    che GitHub normalmente non esegue. Un avvio manuale ripubblica il sito
    anche senza differenze, per consentire di riprovare un deploy fallito.
-8. L'artefatto timetable-reports conserva le cartelle air-check e mottam-check:
+8. L'artefatto timetable-reports conserva air-check, mottam-check ed eav-check:
    fonti originali (PDF/HTML), report leggibili, JSON di estrazione, CSV,
    data.js e line_updates.json proposti. Conservazione: 30 giorni.
 
@@ -61,11 +62,40 @@ le altre linee della home non sono usati per costruire le corse Napoli.
 Via De Pretis in andata rimane senza orario, come nella fonte; non si aggiungono
 orari alle altre fermate della mappa. Le note rimosse dal sito restano assenti.
 
-I controlli AIR e MOT.TAM sono sequenziali per evitare commit concorrenti su
+I controlli AIR, MOT.TAM ed EAV sono sequenziali per evitare commit concorrenti su
 data.js e line_updates.json, ma indipendenti negli esiti. Se una fonte fallisce,
-l'altra puo' essere aggiornata e pubblicata. Il job source-status segnala
+le altre possono essere aggiornate e pubblicate. Il job source-status segnala
 comunque la run fallita per rendere visibile la fonte non verificata; la sua
-data di conferma resta ferma. Se entrambe falliscono nessun dato viene aggiornato.
+data di conferma resta ferma. Se tutte falliscono nessun dato viene aggiornato.
+
+PARSER EAV
+
+Si parte da https://www.eavsrl.it/downloads/orari-linee-ferroviarie-orari-linea-napoli-benevento-orari-ferrovie/.
+Le schede si riconoscono dal titolo autobus sostitutivi + Benevento + Napoli.
+Si sceglie la decorrenza piu' recente gia' in vigore, senza fissare lo slug.
+Due schede diverse con pari decorrenza, o solo documenti futuri, bloccano EAV.
+Il PDF deve avere la stessa decorrenza della scheda selezionata.
+
+Il pulsante espone data-downloadurl: ID wpdmdl e refresh vengono letti dalla
+pagina ogni volta. Non sono codificati nel parser e non serve un browser.
+Una risposta HTML al posto del PDF e' un errore, non un orario vuoto.
+
+Le categorie si estraggono dalle celle fisiche del PDF, comprese le intestazioni
+unite. Numero di corsa, categoria e capolinea devono essere allineati. BUS 1 e
+BUS 2 (veloce) sono corse distinte anche con uguali numero e orari. Non ci sono
+esclusioni di categorie EAV. Le corse che non collegano entrambe le stazioni
+centrali restano nel report come parziali e non compaiono nel sito.
+
+Nel CSV comune sono aggiunte tre colonne opzionali: categoria, numero corsa,
+note. AIR lascia questi campi vuoti; i suoi aggiornamenti preservano i campi
+EAV. Il vecchio CSV a cinque colonne resta leggibile. Il filtro EAV continua
+a includere entrambe le categorie; le etichette sono mostrate nei risultati.
+
+Le note a/b sono lette per sovrapposizione delle celle di validita' con ciascuna
+categoria, evitando di propagarle alla colonna vicina. La legenda deve restare
+riconoscibile: a esclude il 24 e 31 dicembre; b esclude 30 giugno-31 agosto.
+Le note sono mostrate nel sito. Come concordato non si aggiunge un calendario
+giornaliero; tutte le corse sono consultate come feriali lun-ven.
 
 ESITI
 
@@ -90,9 +120,9 @@ Tutte le altre differenze vengono segnalate, incluse rimozioni.
 
 PUBBLICAZIONE AUTOMATICA
 
-La schedulazione esegue entrambi i parser con --apply. Ciascuno preserva i dati
+La schedulazione esegue tutti e tre i parser con --apply. Ciascuno preserva i dati
 delle altre linee. Un errore blocca l'aggiornamento di quella fonte; i report
-rimangono consultabili. Gli aggiornamenti validi dell'altra fonte proseguono.
+rimangono consultabili. Gli aggiornamenti validi delle altre fonti proseguono.
 
 Il workflow Pubblica sito si attiva anche sui push manuali che modificano
 i file del sito. Pubblica solo index.html, app.js, data.js, styles.css e
@@ -104,6 +134,7 @@ python -m pip install -r scripts/requirements-timetables.txt
 python -m unittest discover -s tests -v
 python scripts/check_air_timetables.py
 python scripts/check_mottam_timetables.py
+python scripts/check_eav_timetables.py
 
 Senza --apply vengono prodotti solo report e proposte. Con --apply vengono
 aggiornati anche i file sorgente, ma commit e deploy sono compiti del workflow.
@@ -113,7 +144,7 @@ Per MOT.TAM l'equivalente e' --html percorso/pagina.html.
 Le date per linea sono in assets/timetables/line_updates.json e vengono
 incorporate in data.js: funzionano anche aprendo index.html con file://.
 EAV e MOT.TAM partono dal caricamento del 5 settembre 2026 (commit bd82b89);
-la conferma MOT.TAM avanza dal primo controllo online riuscito.
+la loro conferma avanza dal primo controllo online riuscito.
 Per caricare manualmente nuovi orari aggiornare updated_at della relativa
 linea, con data ISO e fuso orario, poi rigenerare data.js.
 

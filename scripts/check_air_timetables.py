@@ -293,11 +293,12 @@ def apply_rules(tables: list[dict], rules: dict) -> tuple[list[Trip], list[dict]
 def read_current(path: Path) -> tuple[list[list[str]], list[Trip]]:
     with path.open(newline="", encoding="utf-8-sig") as stream:
         reader = csv.DictReader(stream, delimiter=";")
-        if reader.fieldnames != generate_data.COLUMNS:
+        if reader.fieldnames not in (generate_data.COLUMNS, generate_data.TRIP_COLUMNS):
             raise ScheduleError("Schema del CSV attuale inatteso")
-        rows = [[(row[column] or "").strip() for column in generate_data.COLUMNS] for row in reader]
+        rows = [[(row[column] or "").strip() for column in reader.fieldnames] for row in reader]
     current = []
-    for departure, arrival, origin, destination, operator in rows:
+    for row in rows:
+        departure, arrival, origin, destination, operator = row[:5]
         if operator == "AIR":
             direction = next((key for key, stops in DIRECTIONS.items() if stops == (origin, destination)), None)
             if direction is None:
@@ -310,11 +311,13 @@ def read_current(path: Path) -> tuple[list[list[str]], list[Trip]]:
 
 def prepare_proposal(rows: list[list[str]], trips: list[Trip], output: Path, line_updates: dict | None = None) -> None:
     # Keep every non-AIR row byte-for-byte in content and relative order.
-    proposed_rows = [row for row in rows if row[-1] != "AIR"] + [trip.csv_row() for trip in trips]
+    proposed_rows = [row for row in rows if row[4] != "AIR"] + [trip.csv_row() for trip in trips]
+    columns = generate_data.columns_for_trips(proposed_rows)
+    proposed_rows = generate_data.normalized_trips(proposed_rows, columns)
     proposed_csv = output / "orari_eav_air.csv"
     with proposed_csv.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.writer(stream, delimiter=";", lineterminator="\n")
-        writer.writerow(generate_data.COLUMNS)
+        writer.writerow(columns)
         writer.writerows(proposed_rows)
     if line_updates is None:
         line_updates = generate_data.read_line_updates()
@@ -402,7 +405,7 @@ def markdown_report(report: dict) -> str:
         "## Aggiornamento", "",
         ("Dati e date aggiornati: il workflow puo' committare e pubblicare i file."
          if report.get("applied") else "File proposti salvati negli artefatti. Nessun dato pubblicato modificato."), "",
-        "Questo report riguarda AIR. MOT.TAM ha un controllo separato nello stesso workflow; EAV non e' ancora monitorata.", "",
+        "Questo report riguarda AIR. MOT.TAM ed EAV hanno controlli separati nello stesso workflow.", "",
     ])
     return "\n".join(lines)
 

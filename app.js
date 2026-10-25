@@ -338,6 +338,9 @@ function toTrip(headers, values, rowNumber) {
     departureStop: row["stazione partenza"],
     arrivalStop: row["stazione arrivo"],
     line: row.linea || row.line || "",
+    busCategory: row.categoria || "",
+    serviceNumber: row["numero corsa"] || "",
+    serviceNotes: row.note || "",
     departureMinutes,
     arrivalMinutes,
     durationMinutes,
@@ -755,6 +758,13 @@ function createTripElement(trip) {
 
   route.append(from, to);
 
+  if (trip.serviceNotes) {
+    const note = document.createElement("small");
+    note.className = "service-note";
+    note.textContent = trip.serviceNotes;
+    route.append(note);
+  }
+
   if (trip.stops.length > 2) {
     const journeyStops = document.createElement("small");
     journeyStops.className = "journey-stops";
@@ -774,7 +784,17 @@ function createTripElement(trip) {
   duration.className = "meta";
   duration.textContent = formatDuration(trip.durationMinutes);
 
-  aside.append(badge, duration);
+  aside.append(badge);
+  if (trip.busCategory) {
+    const category = document.createElement("span");
+    category.className = "meta bus-category";
+    category.textContent = trip.busCategory;
+    if (trip.serviceNumber) {
+      category.title = `Corsa ${trip.serviceNumber}`;
+    }
+    aside.append(category);
+  }
+  aside.append(duration);
   article.append(timeStack, route, aside);
 
   return article;

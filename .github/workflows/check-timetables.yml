@@ -24,6 +24,7 @@ jobs:
       changed: ${{ steps.commit.outputs.changed }}
       air_outcome: ${{ steps.air.outcome }}
       mottam_outcome: ${{ steps.mottam.outcome }}
+      eav_outcome: ${{ steps.eav.outcome }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -46,6 +47,10 @@ jobs:
         id: mottam
         continue-on-error: true
         run: python scripts/check_mottam_timetables.py --apply
+      - name: Controlla gli orari EAV dal PDF ufficiale
+        id: eav
+        continue-on-error: true
+        run: python scripts/check_eav_timetables.py --apply
       - name: Verifica coerenza dei dati generati
         run: |
           python scripts/generate_data.py
@@ -75,6 +80,9 @@ jobs:
           if [ -f tmp/mottam-check/report.md ]; then
             cat tmp/mottam-check/report.md >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f tmp/eav-check/report.md ]; then
+            cat tmp/eav-check/report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Salva fonte, report e file proposti
         if: always()
         uses: actions/upload-artifact@v4
@@ -83,6 +91,7 @@ jobs:
           path: |
             tmp/air-check/
             tmp/mottam-check/
+            tmp/eav-check/
           if-no-files-found: warn
           retention-days: 30
 
@@ -99,13 +108,16 @@ jobs:
     needs: [update-timetables, publish]
     if: >-
       always() && needs.update-timetables.result == 'success' &&
-      (needs.update-timetables.outputs.air_outcome != 'success' || needs.update-timetables.outputs.mottam_outcome != 'success')
+      (needs.update-timetables.outputs.air_outcome != 'success' ||
+       needs.update-timetables.outputs.mottam_outcome != 'success' ||
+       needs.update-timetables.outputs.eav_outcome != 'success')
     runs-on: ubuntu-latest
     steps:
       - name: Segnala le fonti non verificate
         env:
           AIR_OUTCOME: ${{ needs.update-timetables.outputs.air_outcome }}
           MOTTAM_OUTCOME: ${{ needs.update-timetables.outputs.mottam_outcome }}
+          EAV_OUTCOME: ${{ needs.update-timetables.outputs.eav_outcome }}
         run: |
-          echo "::error::Esito controllo AIR: $AIR_OUTCOME; MOT.TAM: $MOTTAM_OUTCOME. Consultare i report."
+          echo "::error::Esito controllo AIR: $AIR_OUTCOME; MOT.TAM: $MOTTAM_OUTCOME; EAV: $EAV_OUTCOME. Consultare i report."
           exit 1
