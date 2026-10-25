@@ -8,7 +8,7 @@ EAV non e' ancora monitorata: occorrono la pagina ufficiale e un parser dedicato
 COME FUNZIONA
 
 1. Ogni sabato alle 01:23 nel fuso Europe/Rome (ora italiana, anche legale),
-   oppure manualmente da Actions > Aggiorna orari AIR e MOT.TAM > Run workflow.
+   oppure manualmente da Actions > Aggiorna orari > Run workflow.
 2. Si apre https://aircampania.it/linee-e-orari/ e si individua il link
    tramite il testo 01-BN + Benevento + Napoli + feriale. Mese, anno e
    nome del PDF non sono codificati nel workflow. I link festivi sono esclusi.
