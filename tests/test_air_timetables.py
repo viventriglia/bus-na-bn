@@ -1,5 +1,6 @@
 import json
 import io
+import copy
 import tempfile
 import unittest
 from datetime import date
@@ -21,6 +22,12 @@ def example_table(reverse=False):
 
 
 class DiscoveryTests(unittest.TestCase):
+    def test_combined_weekday_holiday_pdf_is_discovered(self):
+        html = ('<a href="01-BN.pdf">01-BN | Benevento - Napoli (feriale+festiva)</a>'
+                '<a href="holiday.pdf">01-BN | Benevento - Napoli festiva</a>')
+        self.assertEqual(air.discover_pdf(html, 'https://aircampania.it/'),
+                         'https://aircampania.it/01-BN.pdf')
+
     def test_link_survives_month_and_filename_change(self):
         html = '<a href="/wp-content/uploads/2027/02/nuovi-orari-12.pdf?rev=2">' \
                '<strong>01-BN |</strong> Benevento - Napoli <b>feriale</b></a>'
@@ -257,7 +264,7 @@ class MetadataTests(unittest.TestCase):
 
 class DocumentTests(unittest.TestCase):
     def run_document(self, text, tables, as_of=date(2026, 10, 25)):
-        page = SimpleNamespace(extract_text=lambda: text, extract_tables=lambda: tables)
+        page = SimpleNamespace(extract_text=lambda: text, extract_tables=lambda: tables, find_tables=lambda: [])
         document = MagicMock()
         document.__enter__.return_value = SimpleNamespace(pages=[page])
         fake_library = SimpleNamespace(open=lambda path: document)
@@ -278,6 +285,15 @@ class DocumentTests(unittest.TestCase):
         with self.assertRaises(air.ScheduleError):
             self.run_document("", [])
 
+    def test_conflicting_effective_dates_require_review(self):
+        with self.assertRaises(air.ScheduleError):
+            air.effective_date('ORARIO IN VIGORE dal 19/10/2026\nOrari in vigore dal 15 Settembre 2026')
+
+    def test_legacy_table_without_weekday_context_requires_review(self):
+        with self.assertRaises(air.ScheduleError):
+            self.run_document('01-BN Orari in vigore dal 15 Settembre 2026',
+                              [example_table(), example_table(True)])
+
     def test_complete_document_with_two_directions(self):
         tables, starts_on = self.run_document(
             "01-BN Orari validi nei giorni feriali. Orari in vigore dal 15 Settembre 2026",
@@ -285,6 +301,78 @@ class DocumentTests(unittest.TestCase):
         )
         self.assertEqual(starts_on, date(2026, 9, 15))
         self.assertEqual({table["direction"] for table in tables}, set(air.DIRECTIONS))
+
+
+class MixedPdfTests(unittest.TestCase):
+    def setUp(self):
+        self.fixture = json.loads((Path(__file__).parent / 'fixtures' / 'air-mixed.json').read_text(encoding='utf-8'))
+
+    def run_fixture(self, payload=None, as_of=date(2026, 10, 26)):
+        pages = []
+        for item in (payload or self.fixture)['pages']:
+            table = SimpleNamespace(extract=lambda item=item: [item['header']],
+                                    rows=[SimpleNamespace(cells=item['cells'])])
+            def extract(settings, item=item):
+                self.assertEqual(settings['vertical_strategy'], 'explicit')
+                self.assertEqual(settings['horizontal_strategy'], 'text')
+                self.assertEqual(settings['explicit_vertical_lines'],
+                                 [cell[0] for cell in item['cells'][:-1]] + [item['cells'][-2][2]])
+                return [item['table']]
+            pages.append(SimpleNamespace(extract_text=lambda item=item: item['text'],
+                                         find_tables=lambda table=table: [table], extract_tables=extract,
+                                         chars=item.get('chars', [])))
+        document = MagicMock()
+        document.__enter__.return_value = SimpleNamespace(pages=pages)
+        with patch.dict('sys.modules', {'pdfplumber': SimpleNamespace(open=lambda path: document)}):
+            return air.parse_pdf(Path('mixed.pdf'), as_of)
+
+    def test_real_mixed_document_preserves_columns_and_excludes_only_holiday_services(self):
+        tables, starts_on = self.run_fixture()
+        self.assertEqual(starts_on, date(2026, 10, 19))
+        self.assertEqual([len(t['holiday_columns']) for t in tables], [3, 5])
+        self.assertEqual([len(t['trips']) for t in tables], [15, 13])
+        self.assertEqual([(i['departure'], i['arrival']) for i in tables[0]['trips']], [
+            ('05:00', '06:30'), ('05:30', '07:15'), ('05:50', '07:35'), ('06:00', '08:00'),
+            ('06:30', '08:30'), ('07:25', '09:25'), ('08:30', '10:30'), ('09:30', '11:30'),
+            ('10:30', '12:30'), ('11:30', '13:30'), ('13:35', '15:35'), ('15:15', '17:30'),
+            ('17:00', '19:00'), ('18:30', '20:30'), ('19:40', '21:35'),
+        ])
+        self.assertEqual([(i['departure'], i['arrival']) for i in tables[1]['trips']], [
+            ('06:30', '08:30'), ('07:35', '09:35'), ('08:45', '10:45'), ('09:30', '11:30'),
+            ('10:30', '12:30'), ('11:30', '13:30'), ('13:15', '15:15'), ('14:15', '16:15'),
+            ('15:30', '17:30'), ('16:30', '18:30'), ('17:45', '19:45'), ('19:15', '21:15'),
+            ('21:35', '23:05'),
+        ])
+
+    def test_unknown_or_contradictory_day_and_code_require_review(self):
+        for days, code in [('sabato', 'A6__FE6'), ('Dom e festivi', 'A6__FE6'),
+                           ('LMmGVS', 'A6__DOM'), ('LMmGVS', 'NEW_CODE'), ('', 'A6__FE6')]:
+            payload = copy.deepcopy(self.fixture)
+            payload['pages'][0]['table'][0][1] = code
+            day_row = next(r for r in payload['pages'][0]['table']
+                           if air.normalized(r[0]) == 'giorni di effettuazione')
+            day_row[1] = days
+            with self.subTest(days=days, code=code), self.assertRaises(air.ScheduleError):
+                self.run_fixture(payload)
+
+    def test_missing_days_header_requires_review(self):
+        payload = copy.deepcopy(self.fixture)
+        payload['pages'][0]['table'] = [r for r in payload['pages'][0]['table']
+                                       if air.normalized(r[0]) != 'giorni di effettuazione']
+        with self.assertRaises(air.ScheduleError):
+            self.run_fixture(payload)
+
+    def test_unnamed_column_with_content_cannot_disappear(self):
+        payload = copy.deepcopy(self.fixture)
+        cell = payload['pages'][0]['cells'][-1]
+        payload['pages'][0]['chars'] = [{'text': '9', 'top': cell[3] + 10,
+                                       'x0': cell[0] + 1, 'x1': cell[0] + 2}]
+        with self.assertRaises(air.ScheduleError):
+            self.run_fixture(payload)
+
+    def test_future_mixed_schedule_is_not_applied_early(self):
+        with self.assertRaisesRegex(air.ScheduleError, 'futuro'):
+            self.run_fixture(as_of=date(2026, 10, 18))
 
 
 if __name__ == "__main__":

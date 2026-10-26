@@ -12,7 +12,8 @@ COME FUNZIONA
    oppure manualmente da Actions > Aggiorna orari > Run workflow.
 2. Si apre https://aircampania.it/linee-e-orari/ e si individua il link
    tramite il testo 01-BN + Benevento + Napoli + feriale. Mese, anno e
-   nome del PDF non sono codificati nel workflow. I link festivi sono esclusi.
+   nome del PDF non sono codificati nel workflow. Sono ammessi anche i link
+   feriale+festiva; quelli esclusivamente festivi sono esclusi.
    Zero link o piu' link distinti producono un errore: non si usa una copia
    vecchia fingendo che sia ancora attuale.
 3. pdfplumber legge la griglia del PDF. Si accoppiano le celle della stessa
@@ -23,6 +24,15 @@ COME FUNZIONA
    senza testo o una struttura sconosciuta richiedono revisione manuale.
    Errori nelle fermate intermedie sono segnalati: quei dati non alimentano
    il sito e non vengono corretti automaticamente.
+   Il formato misto del 19/10/2026 usa Stagionalita' corsa e Giorni di
+   effettuazione: si includono solo le colonne lun-ven/lun-sab, verificando
+   che il codice FE5/FE6 concordi. DOM + Dom e festivi vengono esclusi e
+   riportati nel JSON. Codici sconosciuti o contraddittori bloccano AIR.
+   Le colonne fisiche dell'intestazione sono estese alle righe senza griglia,
+   cosi' il capolinea finale non si fonde con la legenda. Le celle vuote
+   restano nella propria colonna. Si accettano i nomi ufficiali alternativi
+   di Mustilli e Metropark e la data sia testuale sia numerica; date di
+   decorrenza discordanti bloccano il controllo.
 5. Le corse complete vengono deduplicate e confrontate col CSV del sito.
    Il confronto e' sui dati, non sull'URL o sui byte del PDF. Una semplice
    ripubblicazione o una modifica ai metadati non conta come cambio orario.

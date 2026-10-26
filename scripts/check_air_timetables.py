@@ -40,6 +40,10 @@ DIRECTIONS = {
     "benevento_napoli": (BENEVENTO, NAPOLI),
     "napoli_benevento": (NAPOLI, BENEVENTO),
 }
+ENDPOINT_ALIASES = {
+    BENEVENTO: {"benevento terminal bus via mustilli", "benevento via mustilli terminal bus"},
+    NAPOLI: {"napoli metropark terminal bus", "napoli c so lucci terminal metropark"},
+}
 MONTHS = {
     month: index for index, month in enumerate(
         ("gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio",
@@ -108,9 +112,8 @@ def discover_pdf(html: str, page_url: str) -> str:
     for href, label in parser.links:
         words = normalized(label).split()
         route = bool(re.search(r"\b(?:01 bn|bn 01)\b", normalized(label)))
-        if route and {"benevento", "napoli", "feriale"}.issubset(words) and not any(
-            word.startswith("festiv") for word in words
-        ):
+        # Combined feriale+festiva documents are filtered by column, below.
+        if route and {"benevento", "napoli", "feriale"}.issubset(words):
             url = urljoin(page_url, href)
             if not official_url(url):
                 raise ScheduleError("Il PDF individuato non appartiene al sito HTTPS ufficiale AIR")
@@ -171,7 +174,7 @@ def extract_table(table: list[list[str | None]], page_number: int) -> dict | Non
     for row_index, row in enumerate(table):
         for column, cell in enumerate(row):
             for stop in (BENEVENTO, NAPOLI):
-                if normalized(cell) == normalized(stop):
+                if normalized(cell) in ENDPOINT_ALIASES[stop]:
                     if stop in endpoints:
                         raise ScheduleError("Capolinea ripetuto nella stessa tabella")
                     endpoints[stop] = (row_index, column, row)
@@ -186,22 +189,39 @@ def extract_table(table: list[list[str | None]], page_number: int) -> dict | Non
         raise ScheduleError("Colonne dei capolinea non allineate")
 
     headers = [row for row in table[:origin_index] if any(
-        normalized(cell).startswith("validit") for cell in row
+        normalized(cell).startswith("validit") or normalized(cell) == "stagionalita corsa" for cell in row
     )]
     if len(headers) != 1 or len(headers[0]) != len(origin_row):
         raise ScheduleError("Intestazione di validità assente o non allineata")
     header = headers[0]
+    modern = normalized(header[label_column]) == "stagionalita corsa"
+    days_headers = [row for row in table[:origin_index]
+                    if normalized(row[label_column]) == "giorni di effettuazione"]
+    if modern and (len(days_headers) != 1 or len(days_headers[0]) != len(header)):
+        raise ScheduleError("Giorni di effettuazione assenti o non allineati")
     trips = []
     incomplete = []
     warnings = []
+    holiday_columns = []
     for column in range(label_column + 1, len(origin_row)):
+        validity = (header[column] or "").strip()
+        if modern:
+            days = normalized(days_headers[0][column])
+            code = re.sub(r"_+", "_", validity.upper()).strip("_")
+            holiday = days == "dom e festivi" and code == "A6_DOM"
+            weekday = days in {"lmmgv", "lmmgvs"} and bool(re.fullmatch(r"[A-Z0-9]+_?FE[56]", code))
+            if not holiday and not weekday:
+                raise ScheduleError(f"Validità o giorni non riconosciuti/incoerenti: {validity!r}, {days!r}")
+            if holiday:
+                holiday_columns.append({"column": column + 1, "validity": validity,
+                                        "days": days_headers[0][column]})
+                continue
         departure = parse_time(origin_row[column])
         arrival = parse_time(destination_row[column])
         if not departure or not arrival:
             if departure or arrival:
                 incomplete.append({"column": column + 1, "departure": departure, "arrival": arrival})
             continue
-        validity = (header[column] or "").strip()
         if not validity:
             raise ScheduleError("Corsa completa senza codice di validità")
         duration = minutes(arrival) - minutes(departure)
@@ -232,14 +252,59 @@ def extract_table(table: list[list[str | None]], page_number: int) -> dict | Non
         })
     if not trips:
         raise ScheduleError(f"Nessuna corsa completa per {direction}")
-    return {"direction": direction, "trips": trips, "incomplete_columns": incomplete, "warnings": warnings}
+    return {"direction": direction, "trips": trips, "incomplete_columns": incomplete,
+            "holiday_columns": holiday_columns, "warnings": warnings}
 
 
 def effective_date(text: str) -> date:
-    match = re.search(r"orari\s+in\s+vigore\s+dal\s+(\d{1,2})\s+(\w+)\s+(\d{4})", text, re.I)
-    if not match or match[2].casefold() not in MONTHS:
+    dates = set()
+    for match in re.finditer(r"orari(?:o)?\s+in\s+vigore\s+dal\s+(\d{1,2})\s+(\w+)\s+(\d{4})", text, re.I):
+        if match[2].casefold() in MONTHS:
+            dates.add(date(int(match[3]), MONTHS[match[2].casefold()], int(match[1])))
+    for match in re.finditer(r"orari(?:o)?\s+in\s+vigore\s+dal\s+(\d{1,2})/(\d{1,2})/(\d{4})", text, re.I):
+        dates.add(date(int(match[3]), int(match[2]), int(match[1])))
+    if len(dates) != 1:
         raise ScheduleError("Data di entrata in vigore del PDF non riconosciuta")
-    return date(int(match[3]), MONTHS[match[2].casefold()], int(match[1]))
+    return dates.pop()
+
+
+def modern_tables(page) -> list[list[list[str | None]]] | None:
+    """Extend physical header columns through rows whose grid rules are missing.
+
+    The default extractor merges the last stop and legend into one cell.
+    Keep header x coordinates and use text rows, preserving empty time cells.
+    """
+    headers = []
+    for table in page.find_tables():
+        for index, row in enumerate(table.extract()):
+            if row and normalized(row[0]) == "stagionalita corsa":
+                headers.append((row, table.rows[index].cells))
+    if not headers:
+        return None
+    if len(headers) != 1:
+        raise ScheduleError("Più griglie di stagionalità nella stessa pagina AIR")
+    labels, cells = headers[0]
+    while labels and not (labels[-1] or "").strip():
+        # pdfplumber can expose a blank margin beyond the last service.
+        # Reject any text there: an unnamed service must never disappear.
+        margin = cells[-1]
+        if margin is None or any(
+            char["text"].strip() and char["top"] >= margin[1]
+            and margin[0] <= (char["x0"] + char["x1"]) / 2 <= margin[2]
+            for char in page.chars
+        ):
+            raise ScheduleError("Colonna AIR senza codice di stagionalità")
+        labels = labels[:-1]
+        cells = cells[:-1]
+    if len(labels) < 3 or any(not label or cell is None for label, cell in zip(labels, cells)):
+        raise ScheduleError("Griglia delle colonne AIR incompleta")
+    if any(abs(left[2] - right[0]) > 0.5 for left, right in zip(cells, cells[1:])):
+        raise ScheduleError("Colonne AIR non contigue")
+    boundaries = [cell[0] for cell in cells] + [cells[-1][2]]
+    return page.extract_tables({
+        "vertical_strategy": "explicit", "explicit_vertical_lines": boundaries,
+        "horizontal_strategy": "text", "text_x_tolerance": 1,
+    })
 
 
 def parse_pdf(path: Path, as_of: date) -> tuple[list[dict], date]:
@@ -251,14 +316,19 @@ def parse_pdf(path: Path, as_of: date) -> tuple[list[dict], date]:
         if not 1 <= len(pdf.pages) <= 10:
             raise ScheduleError("Numero di pagine inatteso")
         for page_number, page in enumerate(pdf.pages, start=1):
-            texts.append(page.extract_text() or "")
-            for table in page.extract_tables():
+            page_text = page.extract_text() or ""
+            texts.append(page_text)
+            modern = modern_tables(page)
+            for table in modern if modern is not None else page.extract_tables():
                 parsed = extract_table(table, page_number)
                 if parsed:
+                    if modern is None and ("giorni feriali" not in page_text.casefold()
+                                           or "giorni festivi" in page_text.casefold()):
+                        raise ScheduleError("Tabella senza identificazione univoca dei giorni feriali")
                     tables.append(parsed)
 
     text = "\n".join(texts)
-    if not re.search(r"\b01\s*-\s*BN\b", text, re.I) or "giorni feriali" not in text.casefold():
+    if not re.search(r"\b01\s*-\s*BN\b", text, re.I):
         raise ScheduleError("PDF non riconosciuto come linea 01-BN feriale (o scansione senza testo)")
     starts_on = effective_date(text)
     if starts_on > as_of:
@@ -396,12 +466,14 @@ def markdown_report(report: dict) -> str:
             for item in report["exclusions"]
         )
     incomplete = sum(len(table["incomplete_columns"]) for table in report["source_tables"])
+    holidays = sum(len(table.get("holiday_columns", [])) for table in report["source_tables"])
     warnings = [warning for table in report["source_tables"] for warning in table["warnings"]]
     if warnings:
         lines.extend(["", "## Incongruenze della fonte nelle fermate intermedie", ""])
         lines.extend(f"- {warning}" for warning in warnings)
     lines.extend([
-        "", f"Colonne senza entrambi i capolinea: {incomplete} (dettaglio nel JSON).", "",
+        "", f"Colonne domenicali/festive escluse: {holidays} (dettaglio nel JSON).",
+        f"Colonne feriali senza entrambi i capolinea: {incomplete} (dettaglio nel JSON).", "",
         "## Aggiornamento", "",
         ("Dati e date aggiornati: il workflow puo' committare e pubblicare i file."
          if report.get("applied") else "File proposti salvati negli artefatti. Nessun dato pubblicato modificato."), "",
