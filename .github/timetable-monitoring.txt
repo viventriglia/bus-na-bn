@@ -1,4 +1,4 @@
-CONTROLLO SETTIMANALE DEGLI ORARI
+CONTROLLO AUTOMATICO DEGLI ORARI
 
 Copertura: AIR, linea 01-BN feriale, entrambi i sensi tra Benevento Terminal
 Mustilli e Napoli Metropark; MOT.TAM, tutte le corse Benevento-Napoli con
@@ -8,7 +8,8 @@ entrambe le categorie BUS 1 e BUS 2 (veloce).
 
 COME FUNZIONA
 
-1. Ogni sabato alle 01:23 nel fuso Europe/Rome (ora italiana, anche legale),
+1. Ogni martedi', giovedi' e sabato alle 01:23 nel fuso Europe/Rome
+   (ora italiana, anche legale): intervalli di 2, 2 e 3 giorni,
    oppure manualmente da Actions > Aggiorna orari > Run workflow.
 2. Si apre https://aircampania.it/linee-e-orari/ e si individua il link
    tramite il testo 01-BN + Benevento + Napoli + feriale. Mese, anno e
@@ -113,8 +114,25 @@ Exit 0: controllo riuscito, sia senza differenze sia dopo --apply.
 Exit 1: controllo non riuscito (fonte non disponibile o parser non affidabile).
 Exit 2 con --fail-on-changes: variazioni da revisionare; l'Action risulta
 fallita intenzionalmente per renderle visibili. Consultare il riepilogo
-della run per distinguere cambiamenti ed errori. Le notifiche email
-dipendono dalle preferenze GitHub Actions dell'utente.
+della run per distinguere cambiamenti ed errori.
+
+EMAIL IN CASO DI PROBLEMI
+
+Si usano le notifiche native di GitHub Actions, senza servizi email o segreti
+SMTP nel repository. In https://github.com/settings/notifications aprire
+System > Actions, selezionare Email e Only notify for failed workflows,
+poi salvare. Il repository deve essere seguito (Watch).
+Questa preferenza personale non si abilita dal file del workflow.
+
+Per le run manuali la notifica va all'utente che le avvia; per quelle
+schedulate all'utente che ha modificato per ultimo il cron (o riattivato
+la schedulazione). Il job source-status lascia la run fallita anche quando
+una sola fonte e' in errore, dopo aver pubblicato gli aggiornamenti validi:
+cosi' l'errore della fonte puo' generare l'email senza bloccare le altre.
+Anche gli errori del controllo comune o del deploy fanno fallire la run.
+Riferimenti:
+https://docs.github.com/en/subscriptions-and-notifications/how-tos/managing-github-actions-notifications
+https://docs.github.com/en/actions/concepts/workflows-and-actions/notifications-for-workflow-runs
 
 Il report non afferma che l'intero documento e' identico: mantiene i codici
 di validita' ma, secondo la scelta del sito, non calcola stagioni, giorni

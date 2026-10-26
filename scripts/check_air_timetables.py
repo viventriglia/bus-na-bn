@@ -442,7 +442,7 @@ def markdown_report(report: dict) -> str:
     if report["status"] == "error":
         return "# Controllo AIR non riuscito\n\n" + report["error"] + "\n\nGli orari pubblicati non sono stati modificati.\n"
     lines = [
-        "# Controllo settimanale AIR 01-BN", "",
+        "# Controllo AIR 01-BN", "",
         f"Esito: **{report['status']}**", "",
         f"Pagina indice: {report['index_url']}",
         f"PDF individuato: {report['pdf_url'] or report['local_pdf']}",
