@@ -19,6 +19,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "06:37"
       }
     ]
@@ -33,6 +34,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "07:03"
       }
     ]
@@ -57,6 +59,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "07:22"
       }
     ]
@@ -81,6 +84,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "08:02"
       }
     ]
@@ -95,6 +99,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "08:09"
       }
     ]
@@ -109,6 +114,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "08:31"
       },
       {
@@ -133,6 +139,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "09:17"
       }
     ]
@@ -157,6 +164,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "09:45"
       }
     ]
@@ -171,6 +179,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "09:56"
       },
       {
@@ -195,6 +204,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "10:25"
       }
     ]
@@ -219,6 +229,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "10:48"
       }
     ]
@@ -243,6 +254,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "13:43"
       }
     ]
@@ -257,6 +269,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "13:52"
       },
       {
@@ -291,6 +304,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "14:51"
       }
     ]
@@ -305,6 +319,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "15:05"
       },
       {
@@ -339,6 +354,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "16:07"
       }
     ]
@@ -353,6 +369,7 @@
       {
         "name": "Benevento Stazione - via P. Diacono",
         "note": "",
+        "omittedBefore": true,
         "time": "15:49"
       }
     ]
@@ -367,6 +384,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "16:05"
       },
       {
@@ -391,6 +409,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "17:03"
       },
       {
@@ -415,6 +434,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "18:07"
       },
       {
@@ -449,6 +469,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "18:15"
       }
     ]
@@ -463,6 +484,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "19:00"
       }
     ]
@@ -487,6 +509,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "19:21"
       }
     ]
@@ -501,6 +524,7 @@
       {
         "name": "Benevento Stazione - via P. Diacono",
         "note": "",
+        "omittedBefore": true,
         "time": "19:19"
       }
     ]
@@ -515,6 +539,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "19:35"
       },
       {
@@ -549,6 +574,7 @@
       {
         "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
         "note": "",
+        "omittedBefore": true,
         "time": "20:36"
       }
     ]
@@ -563,6 +589,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "20:30"
       },
       {
@@ -587,6 +614,7 @@
       {
         "name": "Benevento, Rione Libertà",
         "note": "",
+        "omittedBefore": true,
         "time": "21:32"
       },
       {

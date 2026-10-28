@@ -260,14 +260,16 @@ def extract_table(table: list[list[str | None]], page_number: int) -> dict | Non
 
 def city_stops(table, first, last, label_column, column, origin, destination, departure, arrival):
     stops = []
+    omitted_times = []
     previous = minutes(departure)
     for index in range(first, last + 1):
         row = table[index]
         label = (row[label_column] or "").strip()
-        if not re.match(r"^(benevento|napoli)\b", normalized(label)):
-            continue
         when = parse_time(row[column])
         if when is None:
+            continue
+        if not re.match(r"^(benevento|napoli)\b", normalized(label)):
+            omitted_times.append(minutes(when))
             continue
         if not previous <= minutes(when) <= minutes(arrival):
             raise ScheduleError(f"Orario incoerente per una fermata urbana AIR: {label} {when}")
@@ -276,7 +278,16 @@ def city_stops(table, first, last, label_column, column, origin, destination, de
             name = "Benevento, Bar 2000"
         stops.append({"name": name, "time": when, "note": ""})
         previous = minutes(when)
+    mark_omitted_stops(stops, omitted_times)
     return stops
+
+
+def mark_omitted_stops(stops: list[dict], omitted_times: list[int]) -> None:
+    # Use published times to locate hidden stops even when a source row is
+    # printed out of sequence. Blank cells and through-stop bars never count.
+    for before, after in zip(stops, stops[1:]):
+        if any(minutes(before["time"]) <= value <= minutes(after["time"]) for value in omitted_times):
+            after["omittedBefore"] = True
 
 
 def stop_details_for(tables: list[dict], trips: list[Trip]) -> dict:

@@ -32,6 +32,7 @@ class CityStopsTests(unittest.TestCase):
         self.assertEqual(first[1]["name"], "Benevento, Bar 2000")
         self.assertEqual(first[0]["name"], air.BENEVENTO)
         self.assertEqual(first[-1]["name"], air.NAPOLI)
+        self.assertEqual([i for i, stop in enumerate(first) if stop.get("omittedBefore")], [4])
         self.assertTrue(all(stop["name"].startswith(("Benevento", "Napoli")) for stop in first))
         reverse = tables[1]["trips"][0]["stops"]
         self.assertEqual(reverse[0]["name"], air.NAPOLI)
@@ -67,9 +68,21 @@ class CityStopsTests(unittest.TestCase):
         fast = next(trip for trip in trips if trip.number == "3775" and trip.category == "BUS 2 (veloce)")
         self.assertEqual([stop["time"] for stop in slow.stops], ["05:44", "05:50", "05:52", "07:22"])
         self.assertEqual([stop["time"] for stop in fast.stops], ["05:44", "07:03"])
+        self.assertTrue(fast.stops[-1]["omittedBefore"])
+        self.assertEqual([i for i, stop in enumerate(slow.stops) if stop.get("omittedBefore")], [3])
         self.assertNotEqual(data.trip_key(slow.csv_row()), data.trip_key(fast.csv_row()))
         reverse = eav.extract_table(self.eav_table(1), 1)["trips"][0]
         self.assertEqual([stop["time"] for stop in reverse.stops], ["07:00", "08:31", "08:34", "08:39"])
+        self.assertTrue(reverse.stops[1]["omittedBefore"])
+
+    def test_blank_non_city_cells_and_bars_do_not_create_hidden_stops(self):
+        table = [["Validità:", "FE6"], [air.BENEVENTO, "06:00"],
+                 ["Apollosa", ""], ["Montesarchio", "|"], [air.NAPOLI, "08:00"]]
+        stops = air.extract_table(table, 1)["trips"][0]["stops"]
+        self.assertFalse(any(stop.get("omittedBefore") for stop in stops))
+        table[2][1] = "06:30"
+        stops = air.extract_table(table, 1)["trips"][0]["stops"]
+        self.assertTrue(stops[-1]["omittedBefore"])
 
     def test_sidecar_update_preserves_other_operator_and_generator_round_trip(self):
         air_trip = air.Trip("benevento_napoli", "05:00", "06:30")

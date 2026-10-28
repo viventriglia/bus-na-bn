@@ -18,10 +18,10 @@ from urllib.request import Request, urlopen
 
 try:
     from . import generate_data
-    from .check_air_timetables import MONTHS, ScheduleError, apply_proposal, effective_date, minutes, normalized, parse_time
+    from .check_air_timetables import MONTHS, ScheduleError, apply_proposal, effective_date, mark_omitted_stops, minutes, normalized, parse_time
 except ImportError:
     import generate_data
-    from check_air_timetables import MONTHS, ScheduleError, apply_proposal, effective_date, minutes, normalized, parse_time
+    from check_air_timetables import MONTHS, ScheduleError, apply_proposal, effective_date, mark_omitted_stops, minutes, normalized, parse_time
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -261,13 +261,15 @@ def extract_table(table, page_number: int) -> dict | None:
             raise ScheduleError(f"Durata EAV implausibile: {departure}-{arrival}")
         notes = " ".join(NOTES[flag] for flag in ("a", "b") if flag in flags)
         stops = []
+        omitted_times = []
         previous = minutes(departure)
         for index in range(origin_index, destination_index + 1):
             label = (values[index][0] or "").strip()
-            if not re.match(r"^(benevento|napoli)\b", normalized(label)):
-                continue
             when = parse_time(single_cell(table.rows[index], values[index], band))
             if when is None:
+                continue
+            if not re.match(r"^(benevento|napoli)\b", normalized(label)):
+                omitted_times.append(minutes(when))
                 continue
             if not previous <= minutes(when) <= minutes(arrival):
                 raise ScheduleError(f"Orario incoerente per una fermata urbana EAV: {label} {when}")
@@ -276,6 +278,7 @@ def extract_table(table, page_number: int) -> dict | None:
                     "benevento p corvo": "Benevento, Pontecorvo"}.get(normalized(label), label.title())
             stops.append({"name": name, "time": when, "note": ""})
             previous = minutes(when)
+        mark_omitted_stops(stops, omitted_times)
         trips.append(EavTrip(direction, departure, arrival, category, number, notes, " ".join(sorted(flags)), stops))
     if not trips:
         raise ScheduleError(f"Nessuna corsa EAV completa per {direction}")

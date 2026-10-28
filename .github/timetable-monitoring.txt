@@ -62,6 +62,9 @@ I filtri offrono solo le citta' Benevento e Napoli; i risultati mantengono
 i capolinea completi e gli stessi orari usati prima. Un clic sul risultato
 apre una lista verticale con cerchi collegati, utilizzabile anche da tastiera.
 Il contenuto del dettaglio viene creato alla prima apertura.
+I collegamenti tratteggiati indicano fermate pubblicate nei comuni non
+mostrati: il dato deriva dagli orari delle celle delle fermate escluse,
+senza contare celle vuote o barre di transito. Una legenda ne spiega il senso.
 
 AIR ed EAV estraggono dalla colonna di ciascuna corsa solo le righe dei due
 comuni. Celle vuote e barre non sono fermate, e non ricevono orari da altre

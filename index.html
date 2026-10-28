@@ -39,18 +39,20 @@
           <button class="secondary-button compact-button" type="button" id="resetSearch">Reset filtri</button>
         </div>
         <form id="searchForm" class="search-form">
-          <div class="field">
-            <label for="fromStop">Partenza</label>
-            <select id="fromStop" name="fromStop" required></select>
-          </div>
+          <div class="route-fields">
+            <div class="field">
+              <label for="fromStop">Partenza</label>
+              <select id="fromStop" name="fromStop" required></select>
+            </div>
 
-          <button class="swap-button" type="button" id="swapStops" aria-label="Inverti partenza e arrivo" title="Inverti">
-            <span aria-hidden="true">&harr;</span>
-          </button>
+            <button class="swap-button" type="button" id="swapStops" aria-label="Inverti partenza e arrivo" title="Inverti">
+              <span aria-hidden="true">&harr;</span>
+            </button>
 
-          <div class="field">
-            <label for="toStop">Arrivo</label>
-            <select id="toStop" name="toStop" required></select>
+            <div class="field">
+              <label for="toStop">Arrivo</label>
+              <select id="toStop" name="toStop" required></select>
+            </div>
           </div>
 
           <div class="field line-field">

@@ -794,6 +794,12 @@ function renderStopTimeline(container, trip) {
   heading.textContent = "Fermate a Benevento e Napoli";
   container.append(heading);
   const variants = trip.stopVariants || [trip.stops];
+  if (variants.some((stops) => stops.some((stop) => stop.omittedBefore))) {
+    const legend = document.createElement("p");
+    legend.className = "timeline-legend";
+    legend.textContent = "Tratteggio: altre fermate intermedie non mostrate";
+    container.append(legend);
+  }
   variants.forEach((stops, index) => {
     if (variants.length > 1) {
       const label = document.createElement("h4");
@@ -802,8 +808,13 @@ function renderStopTimeline(container, trip) {
     }
     const list = document.createElement("ol");
     list.className = "stop-timeline";
-    stops.filter((stop) => getStopCity(stop.name)).forEach((stop) => {
+    const visibleStops = stops.filter((stop) => getStopCity(stop.name));
+    visibleStops.forEach((stop, stopIndex) => {
       const item = document.createElement("li");
+      if (visibleStops[stopIndex + 1]?.omittedBefore) {
+        item.className = "has-omitted-stops";
+        item.title = "Altre fermate intermedie non mostrate lungo questo tratto";
+      }
       const time = document.createElement(stop.time ? "time" : "span");
       time.className = "stop-time";
       time.textContent = stop.time || "—";

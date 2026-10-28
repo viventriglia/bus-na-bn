@@ -763,11 +763,11 @@ window.BUS_SCHEDULE_DATA = {
   ],
   "lineUpdates": {
     "AIR": {
-      "updated_at": "2026-10-28T11:48:52.053725+00:00",
+      "updated_at": "2026-10-28T12:07:31.414859+00:00",
       "checked_at": "2026-10-28T11:58:58.010971+00:00"
     },
     "EAV": {
-      "updated_at": "2026-10-28T11:48:53.728276+00:00",
+      "updated_at": "2026-10-28T12:07:33.130446+00:00",
       "checked_at": "2026-10-28T11:59:07.085178+00:00"
     },
     "MOT.TAM": {
@@ -801,6 +801,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "06:19"
         },
         {
@@ -840,6 +841,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "06:50"
         },
         {
@@ -879,6 +881,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "07:10"
         },
         {
@@ -918,6 +921,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "07:40"
         },
         {
@@ -957,6 +961,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "08:05"
         },
         {
@@ -991,6 +996,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "08:10"
         },
         {
@@ -1030,6 +1036,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "09:00"
         },
         {
@@ -1064,6 +1071,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "09:15"
         },
         {
@@ -1103,6 +1111,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "10:05"
         },
         {
@@ -1137,6 +1146,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "10:25"
         },
         {
@@ -1176,6 +1186,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "11:05"
         },
         {
@@ -1210,6 +1221,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "11:10"
         },
         {
@@ -1249,6 +1261,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "12:05"
         },
         {
@@ -1283,6 +1296,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "12:10"
         },
         {
@@ -1322,6 +1336,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "13:05"
         },
         {
@@ -1356,6 +1371,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "13:10"
         },
         {
@@ -1390,6 +1406,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "14:55"
         },
         {
@@ -1429,6 +1446,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "15:10"
         },
         {
@@ -1463,6 +1481,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "15:55"
         },
         {
@@ -1502,6 +1521,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "17:10"
         },
         {
@@ -1536,6 +1556,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "17:10"
         },
         {
@@ -1570,6 +1591,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "18:10"
         },
         {
@@ -1609,6 +1631,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "18:35"
         },
         {
@@ -1643,6 +1666,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "19:25"
         },
         {
@@ -1682,6 +1706,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "20:10"
         },
         {
@@ -1716,6 +1741,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "20:55"
         },
         {
@@ -1755,6 +1781,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
+          "omittedBefore": true,
           "time": "21:15"
         },
         {
@@ -1789,6 +1816,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 105,Via Appia km 258 900",
           "note": "",
+          "omittedBefore": true,
           "time": "22:49"
         },
         {
@@ -1823,6 +1851,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "06:37"
         }
       ]
@@ -1837,6 +1866,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "07:03"
         }
       ]
@@ -1861,6 +1891,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "07:22"
         }
       ]
@@ -1885,6 +1916,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "08:02"
         }
       ]
@@ -1899,6 +1931,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "08:09"
         }
       ]
@@ -1913,6 +1946,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "08:31"
         },
         {
@@ -1937,6 +1971,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "09:17"
         }
       ]
@@ -1961,6 +1996,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "09:45"
         }
       ]
@@ -1975,6 +2011,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "09:56"
         },
         {
@@ -1999,6 +2036,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "10:25"
         }
       ]
@@ -2023,6 +2061,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "10:48"
         }
       ]
@@ -2047,6 +2086,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "13:43"
         }
       ]
@@ -2061,6 +2101,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "13:52"
         },
         {
@@ -2095,6 +2136,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "14:51"
         }
       ]
@@ -2109,6 +2151,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "15:05"
         },
         {
@@ -2143,6 +2186,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "16:07"
         }
       ]
@@ -2157,6 +2201,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento Stazione - via P. Diacono",
           "note": "",
+          "omittedBefore": true,
           "time": "15:49"
         }
       ]
@@ -2171,6 +2216,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "16:05"
         },
         {
@@ -2195,6 +2241,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "17:03"
         },
         {
@@ -2219,6 +2266,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "18:07"
         },
         {
@@ -2253,6 +2301,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "18:15"
         }
       ]
@@ -2267,6 +2316,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "19:00"
         }
       ]
@@ -2291,6 +2341,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "19:21"
         }
       ]
@@ -2305,6 +2356,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento Stazione - via P. Diacono",
           "note": "",
+          "omittedBefore": true,
           "time": "19:19"
         }
       ]
@@ -2319,6 +2371,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "19:35"
         },
         {
@@ -2353,6 +2406,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
           "note": "",
+          "omittedBefore": true,
           "time": "20:36"
         }
       ]
@@ -2367,6 +2421,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "20:30"
         },
         {
@@ -2391,6 +2446,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Rione Libertà",
           "note": "",
+          "omittedBefore": true,
           "time": "21:32"
         },
         {
