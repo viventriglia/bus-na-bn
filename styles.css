@@ -530,8 +530,6 @@ button:focus-visible {
 }
 .stop-timeline li.has-omitted-stops::after { border-left-style: dashed; }
 .stop-timeline li:first-child::before, .stop-timeline li:last-child::before { background: var(--accent); }
-.timeline-legend { display: flex; align-items: center; gap: 8px; margin: -4px 0 20px; color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
-.timeline-legend::before { content: ""; width: 22px; flex-shrink: 0; border-top: 2px dashed var(--accent); }
 .stop-time { grid-column: 2; font-weight: 750; font-variant-numeric: tabular-nums; }
 .stop-label { grid-column: 3; overflow-wrap: anywhere; }
 .stop-label small { display: block; margin-top: 3px; color: var(--muted); font-size: 0.8rem; }

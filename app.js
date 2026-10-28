@@ -794,12 +794,6 @@ function renderStopTimeline(container, trip) {
   heading.textContent = "Fermate a Benevento e Napoli";
   container.append(heading);
   const variants = trip.stopVariants || [trip.stops];
-  if (variants.some((stops) => stops.some((stop) => stop.omittedBefore))) {
-    const legend = document.createElement("p");
-    legend.className = "timeline-legend";
-    legend.textContent = "Tratteggio: altre fermate intermedie non mostrate";
-    container.append(legend);
-  }
   variants.forEach((stops, index) => {
     if (variants.length > 1) {
       const label = document.createElement("h4");
