@@ -1,0 +1,1029 @@
+{
+  "[\"AIR\",\"05:00\",\"06:30\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "05:00"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "05:02"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "05:07"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "05:09"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "06:19"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "06:28"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "06:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"05:30\",\"07:15\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "05:30"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "05:33"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "05:39"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "05:41"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "06:50"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "07:13"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "07:15"
+      }
+    ]
+  ],
+  "[\"AIR\",\"05:50\",\"07:35\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "05:50"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "05:53"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "05:59"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "06:01"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "07:10"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "07:33"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "07:35"
+      }
+    ]
+  ],
+  "[\"AIR\",\"06:00\",\"08:00\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "06:00"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "06:03"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "06:10"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "06:12"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "07:40"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "07:55"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "08:00"
+      }
+    ]
+  ],
+  "[\"AIR\",\"06:30\",\"08:30\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "06:30"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "06:33"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "06:39"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "06:41"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "08:05"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "08:27"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "08:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"06:30\",\"08:30\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "06:30"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "06:31"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "06:40"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "08:10"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "08:19"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "08:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"07:25\",\"09:25\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "07:25"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "07:28"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "07:34"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "07:36"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "09:00"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "09:22"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "09:25"
+      }
+    ]
+  ],
+  "[\"AIR\",\"07:35\",\"09:35\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "07:35"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "07:36"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "07:45"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "09:15"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "09:30"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "09:35"
+      }
+    ]
+  ],
+  "[\"AIR\",\"08:30\",\"10:30\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "08:30"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "08:33"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "08:39"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "08:41"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "10:05"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "10:27"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "10:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"08:45\",\"10:45\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "08:45"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "08:46"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "08:55"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "10:25"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "10:34"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "10:45"
+      }
+    ]
+  ],
+  "[\"AIR\",\"09:30\",\"11:30\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "09:30"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "09:33"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "09:39"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "09:41"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "11:05"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "11:27"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "11:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"09:30\",\"11:30\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "09:30"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "09:31"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "09:40"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "11:10"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "11:19"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "11:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"10:30\",\"12:30\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "10:30"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "10:33"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "10:39"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "10:41"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "12:05"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "12:27"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "12:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"10:30\",\"12:30\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "10:30"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "10:31"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "10:40"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "12:10"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "12:19"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "12:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"11:30\",\"13:30\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "11:30"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "11:33"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "11:39"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "11:41"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "13:05"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "13:27"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "13:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"11:30\",\"13:30\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "11:30"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "11:31"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "11:40"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "13:10"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "13:19"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "13:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"13:15\",\"15:15\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "13:15"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "13:16"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "13:25"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "14:55"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "15:04"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "15:15"
+      }
+    ]
+  ],
+  "[\"AIR\",\"13:35\",\"15:35\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "13:35"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "13:38"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "13:44"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "13:46"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "15:10"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "15:32"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "15:35"
+      }
+    ]
+  ],
+  "[\"AIR\",\"14:15\",\"16:15\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "14:15"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "14:16"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "14:25"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "15:55"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "16:04"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "16:15"
+      }
+    ]
+  ],
+  "[\"AIR\",\"15:15\",\"17:30\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "15:15"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "15:18"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "15:25"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "15:27"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "17:10"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "17:25"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "17:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"15:30\",\"17:30\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "15:30"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "15:31"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "15:40"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "17:10"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "17:19"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "17:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"16:30\",\"18:30\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "16:30"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "16:31"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "16:40"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "18:10"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "18:19"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "18:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"17:00\",\"19:00\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "17:00"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "17:03"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "17:09"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "17:11"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "18:35"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "18:57"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "19:00"
+      }
+    ]
+  ],
+  "[\"AIR\",\"17:45\",\"19:45\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "17:45"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "17:46"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "17:55"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "19:25"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "19:34"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "19:45"
+      }
+    ]
+  ],
+  "[\"AIR\",\"18:30\",\"20:30\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "18:30"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "18:33"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "18:40"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "18:42"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "20:10"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "20:25"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "20:30"
+      }
+    ]
+  ],
+  "[\"AIR\",\"19:15\",\"21:15\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "19:15"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "19:16"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "19:25"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "20:55"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "21:04"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "21:15"
+      }
+    ]
+  ],
+  "[\"AIR\",\"19:40\",\"21:35\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
+    [
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "19:40"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "19:43"
+      },
+      {
+        "name": "Benevento, Via San Vito 96",
+        "note": "",
+        "time": "19:49"
+      },
+      {
+        "name": "Benevento, SS7 44, Via Appia DF citroen",
+        "note": "",
+        "time": "19:51"
+      },
+      {
+        "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
+        "note": "",
+        "time": "21:15"
+      },
+      {
+        "name": "Napoli,C.so Giuseppe Garibaldi,snc",
+        "note": "",
+        "time": "21:33"
+      },
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "21:35"
+      }
+    ]
+  ],
+  "[\"AIR\",\"21:35\",\"23:05\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
+    [
+      {
+        "name": "Napoli Metropark - Terminal bus",
+        "note": "",
+        "time": "21:35"
+      },
+      {
+        "name": "Napoli, P.za Garibaldi, Corsia Centrale",
+        "note": "",
+        "time": "21:36"
+      },
+      {
+        "name": "Napoli, Via Oreste Salomone",
+        "note": "",
+        "time": "21:45"
+      },
+      {
+        "name": "Benevento, SS7 105,Via Appia km 258 900",
+        "note": "",
+        "time": "22:49"
+      },
+      {
+        "name": "Benevento, Bar 2000",
+        "note": "",
+        "time": "22:56"
+      },
+      {
+        "name": "Benevento, Terminal bus - via Mustilli",
+        "note": "",
+        "time": "23:05"
+      }
+    ]
+  ]
+}

@@ -26,8 +26,8 @@ const THEME_COLORS = {
 };
 const collator = new Intl.Collator("it", { sensitivity: "base" });
 const CITY_OPTIONS = [
-  { value: "__city:Napoli", label: "Napoli - TUTTE", city: "Napoli" },
-  { value: "__city:Benevento", label: "Benevento - TUTTE", city: "Benevento" },
+  { value: "__city:Napoli", label: "Napoli", city: "Napoli" },
+  { value: "__city:Benevento", label: "Benevento", city: "Benevento" },
 ];
 
 const state = {
@@ -130,7 +130,12 @@ function bindEvents() {
     updateResults();
   });
 
-  els.to.addEventListener("change", updateResults);
+  els.to.addEventListener("change", () => {
+    if (els.from.value === els.to.value) {
+      els.from.value = CITY_OPTIONS.find((city) => city.value !== els.to.value).value;
+    }
+    updateResults();
+  });
   els.line.addEventListener("change", updateResults);
 
   els.time.addEventListener("input", updateResults);
@@ -262,7 +267,7 @@ function isEmbeddedSchedule(data) {
 
 function parseEmbeddedSchedule(data) {
   const trips = data.trips
-    .map((values, index) => toTrip(data.columns, values, index + 1))
+    .map((values, index) => toTrip(data.columns, values, index + 1, data.stopDetails))
     .filter(Boolean);
   const journeys = Array.isArray(data.journeys)
     ? data.journeys.map((journey, index) => toJourney(journey, index + 1)).filter(Boolean)
@@ -317,7 +322,7 @@ function parseCsvLine(line) {
   return values;
 }
 
-function toTrip(headers, values, rowNumber) {
+function toTrip(headers, values, rowNumber, stopDetails = {}) {
   const row = Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]));
   const departureMinutes = timeToMinutes(row["orario partenza"]);
   const arrivalMinutes = timeToMinutes(row["orario arrivo"]);
@@ -332,7 +337,7 @@ function toTrip(headers, values, rowNumber) {
       ? arrivalMinutes - departureMinutes
       : arrivalMinutes + DAY_MINUTES - departureMinutes;
 
-  return {
+  const trip = {
     departureTime: row["orario partenza"],
     arrivalTime: row["orario arrivo"],
     departureStop: row["stazione partenza"],
@@ -359,6 +364,10 @@ function toTrip(headers, values, rowNumber) {
       },
     ],
   };
+  const key = JSON.stringify([trip.line, trip.departureTime, trip.arrivalTime,
+    trip.departureStop, trip.arrivalStop, trip.busCategory, trip.serviceNumber]);
+  trip.stopVariants = stopDetails[key] || [trip.stops];
+  return trip;
 }
 
 function toJourney(journey, journeyNumber) {
@@ -396,6 +405,7 @@ function toJourney(journey, journeyNumber) {
     arrivalMinutes: lastStop.timeMinutes,
     durationMinutes,
     stops,
+    stopVariants: [stops],
   };
 }
 
@@ -406,52 +416,19 @@ function getDurationMinutes(departureMinutes, arrivalMinutes) {
 }
 
 function populateFromOptions(preferredValue = "") {
-  const stops = uniqueSorted(
-    state.trips
-      .flatMap(getJourneyDepartureStops),
-  );
-  const { options, values } = buildStopOptions(stops);
-  const nextValue = pickSelectValue(values, preferredValue, stops[0] ?? "");
+  const { options, values } = buildStopOptions();
+  const nextValue = pickSelectValue(values, preferredValue, DEFAULT_FROM);
 
   replaceOptions(els.from, options);
   els.from.value = nextValue;
 }
 
 function updateToOptions(preferredValue = "") {
-  const currentFrom = els.from.value;
-  const stops = uniqueSorted(
-    state.trips
-      .flatMap((trip) => getJourneyArrivalStops(trip, currentFrom)),
-  );
-  const { options, values } = buildStopOptions(stops);
-  const nextValue = pickSelectValue(values, preferredValue, stops[0] ?? "");
+  const { options, values } = buildStopOptions();
+  const nextValue = pickSelectValue(values.filter((value) => value !== els.from.value), preferredValue, DEFAULT_TO);
 
   replaceOptions(els.to, options);
   els.to.value = nextValue;
-}
-
-function getJourneyDepartureStops(trip) {
-  return trip.stops
-    .slice(0, -1)
-    .filter((stop, index) =>
-      stop.timeMinutes !== null && trip.stops.slice(index + 1).some((nextStop) => nextStop.timeMinutes !== null),
-    )
-    .map((stop) => stop.name);
-}
-
-function getJourneyArrivalStops(trip, fromSelection) {
-  const departureIndex = trip.stops.findIndex(
-    (stop) => stop.timeMinutes !== null && stopMatchesSelection(stop.name, fromSelection),
-  );
-
-  if (departureIndex < 0) {
-    return [];
-  }
-
-  return trip.stops
-    .slice(departureIndex + 1)
-    .filter((stop) => stop.timeMinutes !== null)
-    .map((stop) => stop.name);
 }
 
 function replaceOptions(select, options) {
@@ -459,11 +436,9 @@ function replaceOptions(select, options) {
   select.disabled = options.length === 0;
 }
 
-function buildStopOptions(stops) {
-  const options = [
-    ...CITY_OPTIONS.map((cityOption) => new Option(cityOption.label, cityOption.value)),
-    ...stops.map((stop) => new Option(stop, stop)),
-  ];
+function buildStopOptions() {
+  const options = CITY_OPTIONS
+    .map((city) => new Option(city.label, city.value));
   const values = options.map((option) => option.value);
 
   return { options, values };
@@ -500,8 +475,11 @@ function setInitialRoute() {
 
 function applyQueryParams() {
   const params = new URLSearchParams(window.location.search);
-  const from = params.get(QUERY_KEYS.from) ?? "";
-  const to = params.get(QUERY_KEYS.to) ?? "";
+  // Old links containing a specific stop now select its city.
+  const fromCity = getSelectionCity(params.get(QUERY_KEYS.from) ?? "");
+  const toCity = getSelectionCity(params.get(QUERY_KEYS.to) ?? "");
+  const from = fromCity ? `__city:${fromCity}` : "";
+  const to = toCity ? `__city:${toCity}` : "";
   const time = params.get(QUERY_KEYS.time) ?? "";
   const mode = params.get(QUERY_KEYS.mode) ?? "";
   const line = params.get(QUERY_KEYS.line) ?? "";
@@ -672,7 +650,7 @@ function renderResults() {
   els.summary.textContent = makeSummary(matches.length, selectedMinutes, timeMode);
 
   if (routeTrips.length === 0) {
-    renderEmpty("Nessuna corsa per questa tratta.", "Prova a cambiare linea o fermata.");
+    renderEmpty("Nessuna corsa per questa tratta.", "Prova a cambiare linea o direzione.");
     return;
   }
 
@@ -731,8 +709,10 @@ function updatePageTitle() {
 }
 
 function createTripElement(trip) {
-  const article = document.createElement("article");
-  article.className = "trip";
+  const article = document.createElement("details");
+  article.className = "trip-details";
+  const summary = document.createElement("summary");
+  summary.className = "trip";
 
   const timeStack = document.createElement("div");
   timeStack.className = "time-stack";
@@ -765,13 +745,6 @@ function createTripElement(trip) {
     route.append(note);
   }
 
-  if (trip.stops.length > 2) {
-    const journeyStops = document.createElement("small");
-    journeyStops.className = "journey-stops";
-    journeyStops.textContent = trip.stops.map(formatJourneyStop).join(" → ");
-    route.append(journeyStops);
-  }
-
   const aside = document.createElement("div");
   aside.className = "trip-aside";
 
@@ -795,14 +768,60 @@ function createTripElement(trip) {
     aside.append(category);
   }
   aside.append(duration);
-  article.append(timeStack, route, aside);
+  const expand = document.createElement("span");
+  expand.className = "trip-expand";
+  expand.textContent = "Fermate";
+  const arrow = document.createElement("span");
+  arrow.className = "trip-chevron";
+  arrow.setAttribute("aria-hidden", "true");
+  expand.append(arrow);
+  aside.append(expand);
+  summary.append(timeStack, route, aside);
+  const detail = document.createElement("div");
+  detail.className = "trip-stop-detail";
+  article.append(summary, detail);
+  article.addEventListener("toggle", () => {
+    if (article.open && !detail.hasChildNodes()) {
+      renderStopTimeline(detail, trip);
+    }
+  });
 
   return article;
 }
 
-function formatJourneyStop(stop) {
-  const timedStop = stop.time ? `${stop.time} ${stop.name}` : stop.name;
-  return stop.note ? `${timedStop} — ${stop.note}` : timedStop;
+function renderStopTimeline(container, trip) {
+  const heading = document.createElement("h3");
+  heading.textContent = "Fermate a Benevento e Napoli";
+  container.append(heading);
+  const variants = trip.stopVariants || [trip.stops];
+  variants.forEach((stops, index) => {
+    if (variants.length > 1) {
+      const label = document.createElement("h4");
+      label.textContent = `Percorso ${index + 1}`;
+      container.append(label);
+    }
+    const list = document.createElement("ol");
+    list.className = "stop-timeline";
+    stops.filter((stop) => getStopCity(stop.name)).forEach((stop) => {
+      const item = document.createElement("li");
+      const time = document.createElement(stop.time ? "time" : "span");
+      time.className = "stop-time";
+      time.textContent = stop.time || "—";
+      const label = document.createElement("div");
+      label.className = "stop-label";
+      const name = document.createElement("span");
+      name.textContent = stop.name;
+      label.append(name);
+      if (!stop.time || stop.note) {
+        const note = document.createElement("small");
+        note.textContent = stop.note || "Orario non pubblicato";
+        label.append(note);
+      }
+      item.append(time, label);
+      list.append(item);
+    });
+    container.append(list);
+  });
 }
 
 function renderEmpty(title, hint) {

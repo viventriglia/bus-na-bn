@@ -484,7 +484,28 @@ button:focus-visible {
   min-height: 96px;
   padding: 14px 16px;
   background: var(--surface);
+  cursor: pointer;
+  list-style: none;
 }
+
+.trip::-webkit-details-marker { display: none; }
+.trip-details { background: var(--surface); }
+.trip:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.trip-details[open] > .trip { background: var(--surface-muted); }
+.trip-expand { display: flex; align-items: center; gap: 7px; color: var(--accent); font-size: 0.75rem; }
+.trip-chevron { width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); }
+.trip-details[open] .trip-chevron { transform: rotate(225deg); }
+.trip-stop-detail { padding: 20px 24px 4px; border-top: 1px solid var(--border); }
+.trip-stop-detail h3 { margin: 0 0 20px; font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+.trip-stop-detail h4 { margin: 12px 0 16px; font-size: 0.9rem; }
+.stop-timeline { padding: 0; margin: 0; list-style: none; }
+.stop-timeline li { position: relative; display: grid; grid-template-columns: 16px 54px minmax(0, 1fr); column-gap: 12px; padding-bottom: 24px; font-size: 0.9rem; line-height: 1.45; }
+.stop-timeline li::before { content: ""; position: absolute; left: 0; top: 4px; width: 12px; height: 12px; border: 2px solid var(--accent); border-radius: 50%; background: var(--surface); z-index: 1; }
+.stop-timeline li:not(:last-child)::after { content: ""; position: absolute; left: 5px; top: 15px; bottom: -5px; width: 2px; background: var(--accent); }
+.stop-timeline li:first-child::before, .stop-timeline li:last-child::before { background: var(--accent); }
+.stop-time { grid-column: 2; font-weight: 750; font-variant-numeric: tabular-nums; }
+.stop-label { grid-column: 3; overflow-wrap: anywhere; }
+.stop-label small { display: block; margin-top: 3px; color: var(--muted); font-size: 0.8rem; }
 
 .time-stack {
   display: grid;
@@ -523,7 +544,6 @@ button:focus-visible {
   white-space: nowrap;
 }
 
-.route .journey-stops,
 .route .service-note {
   display: block;
   margin-top: 8px;

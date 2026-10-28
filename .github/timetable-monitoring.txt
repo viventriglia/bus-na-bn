@@ -23,8 +23,10 @@ COME FUNZIONA
 4. Si verificano tratta, giorni feriali, data di decorrenza, intestazioni,
    colonne, formato delle ore e durata. Un documento futuro, una scansione
    senza testo o una struttura sconosciuta richiedono revisione manuale.
-   Errori nelle fermate intermedie sono segnalati: quei dati non alimentano
-   il sito e non vengono corretti automaticamente.
+   Le fermate intermedie nei comuni di Benevento e Napoli alimentano il
+   dettaglio delle corse: i loro orari devono essere coerenti con la corsa.
+   Errori nelle altre fermate intermedie sono segnalati nel report e non
+   vengono corretti automaticamente.
    Il formato misto del 19/10/2026 usa Stagionalita' corsa e Giorni di
    effettuazione: si includono solo le colonne lun-ven/lun-sab, verificando
    che il codice FE5/FE6 concordi. DOM + Dom e festivi vengono esclusi e
@@ -40,9 +42,10 @@ COME FUNZIONA
 6. Se ci sono differenze valide, --apply aggiorna CSV e data.js. Ogni controllo
    online riuscito aggiorna anche la data di conferma AIR in line_updates.json,
    pure quando gli orari sono invariati. La data di modifica avanza solo
-   quando cambiano le corse. MOT.TAM ed EAV aggiornano allo stesso modo
+   quando cambiano le corse o le fermate mostrate. MOT.TAM ed EAV aggiornano allo stesso modo
    i propri dati e le rispettive conferme.
-   L'Action committa esclusivamente i due CSV, line_updates.json e data.js.
+   L'Action committa i due CSV, air_stops.json, eav_stops.json,
+   line_updates.json e data.js.
    Le sostituzioni dei file sono atomiche; un errore di scrittura ripristina
    i dati precedenti. Un push in conflitto fallisce invece di forzare il branch.
 7. Il workflow chiama esplicitamente deploy-pages.yml per pubblicare i dati
@@ -51,7 +54,32 @@ COME FUNZIONA
    anche senza differenze, per consentire di riprovare un deploy fallito.
 8. L'artefatto timetable-reports conserva air-check, mottam-check ed eav-check:
    fonti originali (PDF/HTML), report leggibili, JSON di estrazione, CSV,
-   data.js e line_updates.json proposti. Conservazione: 30 giorni.
+   fermate urbane, data.js e line_updates.json proposti. Conservazione: 30 giorni.
+
+DETTAGLIO DELLE FERMATE
+
+I filtri offrono solo le citta' Benevento e Napoli; i risultati mantengono
+i capolinea completi e gli stessi orari usati prima. Un clic sul risultato
+apre una lista verticale con cerchi collegati, utilizzabile anche da tastiera.
+Il contenuto del dettaglio viene creato alla prima apertura.
+
+AIR ed EAV estraggono dalla colonna di ciascuna corsa solo le righe dei due
+comuni. Celle vuote e barre non sono fermate, e non ricevono orari da altre
+colonne. BUS 1 e BUS 2 conservano percorsi distinti. AIR mantiene eventuali
+varianti di fermate della stessa corsa deduplicata come percorsi separati;
+le esclusioni manuali valgono anche per i dettagli.
+
+air_stops.json ed eav_stops.json sono dati generati dalle rispettive fonti,
+collegati a linea, orari, capolinea, categoria e numero di corsa. Ogni parser
+aggiorna solo il proprio file e preserva quello dell'altra linea. Cambiamenti
+alle sole fermate sono rilevati e pubblicati anche a capolinea invariati.
+data.js incorpora entrambi i file e le fermate gia' presenti nel CSV MOT.TAM,
+quindi i dettagli funzionano anche senza server o richieste aggiuntive.
+Via De Pretis MOT.TAM in andata resta nel dettaglio con orario non pubblicato;
+l'anteprima conserva Piazza Garibaldi, ultimo arrivo con orario disponibile.
+
+I vecchi link a una fermata specifica vengono ricondotti alla rispettiva citta'.
+La verifica del workflow include anche node --test tests/test_app.cjs.
 
 PARSER MOT.TAM
 

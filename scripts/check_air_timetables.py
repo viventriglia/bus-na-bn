@@ -249,11 +249,48 @@ def extract_table(table: list[list[str | None]], page_number: int) -> dict | Non
             "validity": validity,
             "page": page_number,
             "column": column + 1,
+            "stops": city_stops(table, origin_index, destination_index, label_column, column,
+                                origin, destination, departure, arrival),
         })
     if not trips:
         raise ScheduleError(f"Nessuna corsa completa per {direction}")
     return {"direction": direction, "trips": trips, "incomplete_columns": incomplete,
             "holiday_columns": holiday_columns, "warnings": warnings}
+
+
+def city_stops(table, first, last, label_column, column, origin, destination, departure, arrival):
+    stops = []
+    previous = minutes(departure)
+    for index in range(first, last + 1):
+        row = table[index]
+        label = (row[label_column] or "").strip()
+        if not re.match(r"^(benevento|napoli)\b", normalized(label)):
+            continue
+        when = parse_time(row[column])
+        if when is None:
+            continue
+        if not previous <= minutes(when) <= minutes(arrival):
+            raise ScheduleError(f"Orario incoerente per una fermata urbana AIR: {label} {when}")
+        name = origin if index == first else destination if index == last else label
+        if normalized(name).startswith("benevento via almerico meomartini"):
+            name = "Benevento, Bar 2000"
+        stops.append({"name": name, "time": when, "note": ""})
+        previous = minutes(when)
+    return stops
+
+
+def stop_details_for(tables: list[dict], trips: list[Trip]) -> dict:
+    allowed = set(trips)
+    details = {}
+    for table in tables:
+        for item in table["trips"]:
+            trip = Trip(item["direction"], item["departure"], item["arrival"])
+            if trip not in allowed or not item.get("stops"):
+                continue
+            variants = details.setdefault(generate_data.trip_key(trip.csv_row()), [])
+            if item["stops"] not in variants:
+                variants.append(item["stops"])
+    return details
 
 
 def effective_date(text: str) -> date:
@@ -379,7 +416,8 @@ def read_current(path: Path) -> tuple[list[list[str]], list[Trip]]:
     return rows, current
 
 
-def prepare_proposal(rows: list[list[str]], trips: list[Trip], output: Path, line_updates: dict | None = None) -> None:
+def prepare_proposal(rows: list[list[str]], trips: list[Trip], output: Path, line_updates: dict | None = None,
+                     stop_details: dict | None = None) -> None:
     # Keep every non-AIR row byte-for-byte in content and relative order.
     proposed_rows = [row for row in rows if row[4] != "AIR"] + [trip.csv_row() for trip in trips]
     columns = generate_data.columns_for_trips(proposed_rows)
@@ -391,8 +429,9 @@ def prepare_proposal(rows: list[list[str]], trips: list[Trip], output: Path, lin
         writer.writerows(proposed_rows)
     if line_updates is None:
         line_updates = generate_data.read_line_updates()
+    combined = None if stop_details is None else generate_data.prepare_stop_details("AIR", stop_details, output)
     (output / "data.js").write_text(
-        generate_data.schedule_js(proposed_rows, generate_data.read_mottam_journeys(), line_updates),
+        generate_data.schedule_js(proposed_rows, generate_data.read_mottam_journeys(), line_updates, combined),
         encoding="utf-8",
     )
     (output / generate_data.LINE_UPDATES_PATH.name).write_text(
@@ -422,10 +461,10 @@ def replace_bytes(path: Path, content: bytes) -> None:
             temporary.unlink(missing_ok=True)
 
 
-def apply_proposal(output: Path, originals: dict[Path, bytes]) -> None:
+def apply_proposal(output: Path, originals: dict[Path, bytes | None]) -> None:
     """Apply validated files; roll back earlier replacements on failure."""
     for target, original in originals.items():
-        if target.read_bytes() != original:
+        if (target.read_bytes() if target.exists() else None) != original:
             raise ScheduleError(f"File modificato durante il controllo: {target.name}")
     written = []
     try:
@@ -434,7 +473,10 @@ def apply_proposal(output: Path, originals: dict[Path, bytes]) -> None:
             written.append(target)
     except Exception:
         for target in reversed(written):
-            replace_bytes(target, originals[target])
+            if originals[target] is None:
+                target.unlink(missing_ok=True)
+            else:
+                replace_bytes(target, originals[target])
         raise
 
 
@@ -450,6 +492,7 @@ def markdown_report(report: dict) -> str:
         f"SHA-256 PDF: `{report['pdf_sha256']}`", "",
         "Confronto tra capolinea, per entrambi i sensi. Validità trattata come lun-ven secondo la scelta del sito.",
         "I codici originali restano nel JSON; questo controllo non calcola calendari scolastici o stagionali.", "",
+        f"Fermate urbane aggiornate: {'sì' if report.get('stops_changed') else 'no'}.", "",
     ]
     for key, title in (("added", "Da aggiungere"), ("removed", "Da rimuovere")):
         lines.extend([f"## {title}", ""])
@@ -500,8 +543,9 @@ def main(argv: list[str] | None = None) -> int:
     if output == ROOT or output == published or published in output.parents:
         parser.error("La directory di output deve essere separata dai dati pubblicati")
     output.mkdir(parents=True, exist_ok=True)
+    stops_path = CURRENT_CSV.with_name("air_stops.json")
     # Never leave last run's proposals next to this run's error report.
-    for filename in ("orari_eav_air.csv", "data.js", generate_data.LINE_UPDATES_PATH.name):
+    for filename in ("orari_eav_air.csv", "data.js", generate_data.LINE_UPDATES_PATH.name, stops_path.name):
         (output / filename).unlink(missing_ok=True)
     if args.pdf is None or args.pdf.resolve() != output / "source.pdf":
         (output / "source.pdf").unlink(missing_ok=True)
@@ -522,20 +566,24 @@ def main(argv: list[str] | None = None) -> int:
         pdf_path.write_bytes(pdf_bytes)
         tables, starts_on = parse_pdf(pdf_path, args.as_of)
         proposed, exclusions = apply_rules(tables, rules)
+        details = stop_details_for(tables, proposed)
+        details_changed = details != generate_data.read_stop_details(stops_path)
         originals = {
             CURRENT_CSV: CURRENT_CSV.read_bytes(),
             generate_data.OUTPUT_PATH: generate_data.OUTPUT_PATH.read_bytes(),
             generate_data.LINE_UPDATES_PATH: generate_data.LINE_UPDATES_PATH.read_bytes(),
+            stops_path: stops_path.read_bytes() if stops_path.exists() else None,
         }
         rows, current = read_current(CURRENT_CSV)
         added = sorted(set(proposed) - set(current))
         removed = sorted(set(current) - set(proposed))
         previous_metadata = generate_data.read_line_updates()
         line_updates = update_air_metadata(
-            previous_metadata, report["checked_at"], bool(added or removed), args.pdf is None
+            previous_metadata, report["checked_at"], bool(added or removed or details_changed), args.pdf is None
         )
         report.update({
-            "status": "changes" if added or removed else "unchanged",
+            "status": "changes" if added or removed or details_changed else "unchanged",
+            "stops_changed": details_changed,
             "index_url": index_url,
             "pdf_url": pdf_url,
             "local_pdf": str(args.pdf) if args.pdf else None,
@@ -548,14 +596,14 @@ def main(argv: list[str] | None = None) -> int:
             "proposed_count": len(proposed),
             "metadata_updated": line_updates != previous_metadata,
         })
-        prepare_proposal(rows, proposed, output, line_updates)
-        if args.apply and (added or removed or line_updates != previous_metadata):
+        prepare_proposal(rows, proposed, output, line_updates, details)
+        if args.apply and (added or removed or details_changed or line_updates != previous_metadata):
             apply_proposal(output, originals)
             report["applied"] = True
     except Exception as error:
         report["status"] = "error"
         report["error"] = f"{type(error).__name__}: {error}"
-        for filename in ("orari_eav_air.csv", "data.js", generate_data.LINE_UPDATES_PATH.name):
+        for filename in ("orari_eav_air.csv", "data.js", generate_data.LINE_UPDATES_PATH.name, stops_path.name):
             (output / filename).unlink(missing_ok=True)
     (output / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     summary = markdown_report(report)

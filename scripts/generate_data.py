@@ -126,13 +126,53 @@ def read_line_updates() -> dict[str, dict[str, str | None]]:
     return updates
 
 
-def schedule_js(trips: list[list[str]], journeys: list[dict], line_updates: dict) -> str:
+def trip_key(row: list[str]) -> str:
+    padded = row + [""] * max(0, len(TRIP_COLUMNS) - len(row))
+    return json.dumps([padded[4], *padded[:4], padded[5], padded[6]], ensure_ascii=False, separators=(",", ":"))
+
+
+def stops_path(line: str) -> Path:
+    return CSV_PATH.with_name(f"{line.lower()}_stops.json")
+
+
+def read_stop_details(path: Path | None = None) -> dict:
+    if path is None:
+        return {**read_stop_details(stops_path("AIR")), **read_stop_details(stops_path("EAV"))}
+    if not path.exists():
+        return {}
+    details = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(details, dict):
+        raise ValueError("Formato fermate non riconosciuto")
+    for key, variants in details.items():
+        identity = json.loads(key)
+        if len(identity) != 7 or identity[0] not in {"AIR", "EAV"} or not variants:
+            raise ValueError("Identità o percorsi delle fermate non validi")
+        for stops in variants:
+            if len(stops) < 2 or any(not stop.get("name") or not stop.get("time") for stop in stops):
+                raise ValueError("Percorso senza fermate/orari completi")
+            if (stops[0]["name"], stops[-1]["name"], stops[0]["time"], stops[-1]["time"]) != (
+                identity[3], identity[4], identity[1], identity[2]
+            ):
+                raise ValueError("Fermate non coerenti con i capolinea della corsa")
+    return details
+
+
+def prepare_stop_details(line: str, details: dict, output: Path) -> dict:
+    (output / stops_path(line).name).write_text(
+        json.dumps(details, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    combined = {key: value for key, value in read_stop_details().items() if json.loads(key)[0] != line}
+    return {**combined, **details}
+
+
+def schedule_js(trips: list[list[str]], journeys: list[dict], line_updates: dict, stop_details: dict | None = None) -> str:
     columns = columns_for_trips(trips)
     payload = {
         "columns": columns,
         "trips": normalized_trips(trips, columns),
         "journeys": journeys,
         "lineUpdates": line_updates,
+        "stopDetails": read_stop_details() if stop_details is None else stop_details,
     }
     js = '"use strict";\n\nwindow.BUS_SCHEDULE_DATA = '
     js += json.dumps(payload, ensure_ascii=False, indent=2)

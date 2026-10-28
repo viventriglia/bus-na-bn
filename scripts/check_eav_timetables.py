@@ -46,6 +46,7 @@ class EavTrip:
     number: str
     notes: str = ""
     flags: str = field(default="", compare=False)
+    stops: list[dict] = field(default_factory=list, compare=False)
 
     def csv_row(self) -> list[str]:
         origin, destination = DIRECTIONS[self.direction]
@@ -259,7 +260,23 @@ def extract_table(table, page_number: int) -> dict | None:
         if not 30 <= minutes(arrival) - minutes(departure) <= 240:
             raise ScheduleError(f"Durata EAV implausibile: {departure}-{arrival}")
         notes = " ".join(NOTES[flag] for flag in ("a", "b") if flag in flags)
-        trips.append(EavTrip(direction, departure, arrival, category, number, notes, " ".join(sorted(flags))))
+        stops = []
+        previous = minutes(departure)
+        for index in range(origin_index, destination_index + 1):
+            label = (values[index][0] or "").strip()
+            if not re.match(r"^(benevento|napoli)\b", normalized(label)):
+                continue
+            when = parse_time(single_cell(table.rows[index], values[index], band))
+            if when is None:
+                continue
+            if not previous <= minutes(when) <= minutes(arrival):
+                raise ScheduleError(f"Orario incoerente per una fermata urbana EAV: {label} {when}")
+            name = {normalized(BN_LABEL): BENEVENTO, normalized(NA_LABEL): NAPOLI,
+                    "benevento appia": "Benevento Appia", "benevento r liberta": "Benevento, Rione Libertà",
+                    "benevento p corvo": "Benevento, Pontecorvo"}.get(normalized(label), label.title())
+            stops.append({"name": name, "time": when, "note": ""})
+            previous = minutes(when)
+        trips.append(EavTrip(direction, departure, arrival, category, number, notes, " ".join(sorted(flags)), stops))
     if not trips:
         raise ScheduleError(f"Nessuna corsa EAV completa per {direction}")
     return {"direction": direction, "page": page_number, "trips": trips, "partial": partial}
@@ -336,7 +353,9 @@ def prepare_proposal(rows: list[list[str]], trips: list[EavTrip], updates: dict,
         writer = csv.writer(stream, delimiter=";", lineterminator="\n")
         writer.writerow(generate_data.TRIP_COLUMNS)
         writer.writerows(proposed)
-    (output / "data.js").write_text(generate_data.schedule_js(proposed, generate_data.read_mottam_journeys(), updates), encoding="utf-8")
+    details = {generate_data.trip_key(trip.csv_row()): [trip.stops] for trip in trips if trip.stops}
+    combined = generate_data.prepare_stop_details("EAV", details, output)
+    (output / "data.js").write_text(generate_data.schedule_js(proposed, generate_data.read_mottam_journeys(), updates, combined), encoding="utf-8")
     (output / generate_data.LINE_UPDATES_PATH.name).write_text(json.dumps(updates, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
@@ -351,6 +370,7 @@ def markdown_report(report: dict) -> str:
              f"Scheda: {report['detail_url']}", f"PDF: {report['pdf_url'] or report['local_pdf']}",
              f"Decorrenza: {report['effective_from']}", f"Corse complete: {report['trip_count']}",
              f"Righe precedenti arricchite con categoria e numero: {report['enriched']}", ""]
+    lines.extend([f"Fermate urbane aggiornate: {'sì' if report.get('stops_changed') else 'no'}.", ""])
     for key, title in (("added", "Da aggiungere"), ("removed", "Da rimuovere")):
         lines.extend([f"## {title}", ""])
         lines.extend(f"- {describe(trip)}" for trip in report[key])
@@ -378,7 +398,8 @@ def main(argv: list[str] | None = None) -> int:
     if output == ROOT or output == published or published in output.parents:
         parser.error("Directory di output da tenere separata dai file pubblicati")
     output.mkdir(parents=True, exist_ok=True)
-    names = (generate_data.CSV_PATH.name, "data.js", generate_data.LINE_UPDATES_PATH.name)
+    stops_path = generate_data.stops_path("EAV")
+    names = (generate_data.CSV_PATH.name, "data.js", generate_data.LINE_UPDATES_PATH.name, stops_path.name)
     for name in names:
         (output / name).unlink(missing_ok=True)
     report = {"status": "error", "checked_at": datetime.now(timezone.utc).isoformat(), "applied": False}
@@ -400,10 +421,13 @@ def main(argv: list[str] | None = None) -> int:
         pdf_path.write_bytes(content)
         trips, tables, starts_on = parse_pdf(pdf_path, args.as_of, expected_date)
         originals = {path: path.read_bytes() for path in (generate_data.CSV_PATH, generate_data.OUTPUT_PATH, generate_data.LINE_UPDATES_PATH)}
+        originals[stops_path] = stops_path.read_bytes() if stops_path.exists() else None
+        details = {generate_data.trip_key(trip.csv_row()): [trip.stops] for trip in trips if trip.stops}
+        details_changed = details != generate_data.read_stop_details(stops_path)
         rows = generate_data.read_trips()
         current, enriched = current_trips(rows, trips)
         added, removed = sorted(set(trips) - set(current)), sorted(set(current) - set(trips))
-        changed = bool(added or removed or enriched)
+        changed = bool(added or removed or enriched or details_changed)
         previous_updates = generate_data.read_line_updates()
         updates = {line: dict(entry) for line, entry in previous_updates.items()}
         if changed:
@@ -416,6 +440,7 @@ def main(argv: list[str] | None = None) -> int:
         report.update({"status": "changes" if changed else "unchanged", "detail_url": detail_url, "pdf_url": pdf_url,
                        "local_pdf": str(args.pdf) if args.pdf else None, "effective_from": starts_on.isoformat(),
                        "pdf_sha256": hashlib.sha256(content).hexdigest(), "trip_count": len(trips), "enriched": enriched,
+                       "stops_changed": details_changed,
                        "added": [asdict(trip) for trip in added], "removed": [asdict(trip) for trip in removed],
                        "trips": [asdict(trip) for trip in trips],
                        "partial": [item for table in tables for item in table["partial"]]})

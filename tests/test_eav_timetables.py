@@ -189,6 +189,8 @@ class ApplicationTests(unittest.TestCase):
         self.assertEqual(new["AIR"], old["AIR"])
         self.assertEqual(new["MOT.TAM"], old["MOT.TAM"])
         self.assertEqual(new["EAV"]["checked_at"], report["checked_at"])
+        self.assertTrue(report["stops_changed"])
+        self.assertEqual(new["EAV"]["updated_at"], report["checked_at"])
         payload = json.loads(after["OUTPUT_PATH"].decode("utf-8").replace("\r\n", "\n").split(" = ", 1)[1].removesuffix(";\n"))
         self.assertEqual(payload["columns"], eav.generate_data.TRIP_COLUMNS)
         self.assertEqual(sum(row[4] == "EAV" for row in payload["trips"]), 28)

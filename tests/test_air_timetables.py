@@ -240,6 +240,9 @@ class MetadataTests(unittest.TestCase):
             with patch.object(air.generate_data, "read_mottam_journeys", return_value=[]):
                 air.prepare_proposal([], trips, folder, self.previous)
             original_csv = current.read_bytes()
+            (folder / "air_stops.json").write_text(
+                json.dumps(air.stop_details_for(tables, trips)), encoding="utf-8"
+            )
             with patch.object(air, "CURRENT_CSV", current), \
                  patch.object(air.generate_data, "OUTPUT_PATH", javascript), \
                  patch.object(air.generate_data, "LINE_UPDATES_PATH", metadata), \

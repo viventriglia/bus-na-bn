@@ -1,0 +1,604 @@
+{
+  "[\"EAV\",\"04:59\",\"06:37\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3773\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "04:59"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "05:05"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "05:07"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "06:37"
+      }
+    ]
+  ],
+  "[\"EAV\",\"05:44\",\"07:03\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 2 (veloce)\",\"3775\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "05:44"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "07:03"
+      }
+    ]
+  ],
+  "[\"EAV\",\"05:44\",\"07:22\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3775\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "05:44"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "05:50"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "05:52"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "07:22"
+      }
+    ]
+  ],
+  "[\"EAV\",\"06:20\",\"08:02\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3777\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "06:20"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "06:26"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "06:28"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "08:02"
+      }
+    ]
+  ],
+  "[\"EAV\",\"06:50\",\"08:09\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 2 (veloce)\",\"3777\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "06:50"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "08:09"
+      }
+    ]
+  ],
+  "[\"EAV\",\"07:00\",\"08:39\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3772\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "07:00"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "08:31"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "08:34"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "08:39"
+      }
+    ]
+  ],
+  "[\"EAV\",\"07:58\",\"09:17\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 2 (veloce)\",\"3779\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "07:58"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "09:17"
+      }
+    ]
+  ],
+  "[\"EAV\",\"07:58\",\"09:45\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3779\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "07:58"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "08:04"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "08:06"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "09:45"
+      }
+    ]
+  ],
+  "[\"EAV\",\"08:21\",\"10:04\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3774\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "08:21"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "09:56"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "09:59"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "10:04"
+      }
+    ]
+  ],
+  "[\"EAV\",\"09:06\",\"10:25\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 2 (veloce)\",\"3781\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "09:06"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "10:25"
+      }
+    ]
+  ],
+  "[\"EAV\",\"09:06\",\"10:48\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3781\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "09:06"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "09:12"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "09:14"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "10:48"
+      }
+    ]
+  ],
+  "[\"EAV\",\"12:05\",\"13:43\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3783\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "12:05"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "12:11"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "12:13"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "13:43"
+      }
+    ]
+  ],
+  "[\"EAV\",\"12:18\",\"14:00\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3776\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "12:18"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "13:52"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "13:55"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "14:00"
+      }
+    ]
+  ],
+  "[\"EAV\",\"13:11\",\"14:51\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3785\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "13:11"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "13:17"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "13:19"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "14:51"
+      }
+    ]
+  ],
+  "[\"EAV\",\"13:30\",\"15:13\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3778\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "13:30"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "15:05"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "15:08"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "15:13"
+      }
+    ]
+  ],
+  "[\"EAV\",\"14:19\",\"16:07\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3787\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "14:19"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "14:25"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "14:27"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "16:07"
+      }
+    ]
+  ],
+  "[\"EAV\",\"14:30\",\"15:49\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 2 (veloce)\",\"3780\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "14:30"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "15:49"
+      }
+    ]
+  ],
+  "[\"EAV\",\"14:30\",\"16:13\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3780\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "14:30"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "16:05"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "16:08"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "16:13"
+      }
+    ]
+  ],
+  "[\"EAV\",\"15:31\",\"17:11\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3782\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "15:31"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "17:03"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "17:06"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "17:11"
+      }
+    ]
+  ],
+  "[\"EAV\",\"16:30\",\"18:16\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3784\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "16:30"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "18:07"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "18:10"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "18:16"
+      }
+    ]
+  ],
+  "[\"EAV\",\"16:33\",\"18:15\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3789\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "16:33"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "16:39"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "16:41"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "18:15"
+      }
+    ]
+  ],
+  "[\"EAV\",\"17:41\",\"19:00\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 2 (veloce)\",\"3791\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "17:41"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "19:00"
+      }
+    ]
+  ],
+  "[\"EAV\",\"17:41\",\"19:21\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3791\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "17:41"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "17:47"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "17:49"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "19:21"
+      }
+    ]
+  ],
+  "[\"EAV\",\"18:00\",\"19:19\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 2 (veloce)\",\"3786\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "18:00"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "19:19"
+      }
+    ]
+  ],
+  "[\"EAV\",\"18:00\",\"19:43\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3786\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "18:00"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "19:35"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "19:38"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "19:43"
+      }
+    ]
+  ],
+  "[\"EAV\",\"18:49\",\"20:36\",\"Benevento Stazione - via P. Diacono\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"BUS 1\",\"3793\"]": [
+    [
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "18:49"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "18:55"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "18:57"
+      },
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "20:36"
+      }
+    ]
+  ],
+  "[\"EAV\",\"19:00\",\"20:42\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3788\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "19:00"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "20:30"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "20:37"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "20:42"
+      }
+    ]
+  ],
+  "[\"EAV\",\"20:00\",\"21:41\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 1\",\"3790\"]": [
+    [
+      {
+        "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+        "note": "",
+        "time": "20:00"
+      },
+      {
+        "name": "Benevento, Rione Libertà",
+        "note": "",
+        "time": "21:32"
+      },
+      {
+        "name": "Benevento Appia",
+        "note": "",
+        "time": "21:35"
+      },
+      {
+        "name": "Benevento Stazione - via P. Diacono",
+        "note": "",
+        "time": "21:41"
+      }
+    ]
+  ]
+}
