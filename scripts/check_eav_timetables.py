@@ -33,6 +33,10 @@ NAPOLI = "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)"
 DIRECTIONS = {"benevento_napoli": (BENEVENTO, NAPOLI), "napoli_benevento": (NAPOLI, BENEVENTO)}
 CATEGORIES = {"1": "BUS 1", "2": "BUS 2 (veloce)"}
 CATEGORY_RE = re.compile(r"BUS\s*([12])\s*\**", re.I)
+# Preserve closely spaced horizontal rules in the published PDF. The default
+# 3pt snapping merges the return-table top border with nearby decorative rules,
+# leaving the service-number row outside the extracted table.
+TABLE_SETTINGS = {"snap_y_tolerance": 1}
 NOTES = {"a": "Non si effettua il 24 e il 31 dicembre.",
          "b": "Non si effettua dal 30 giugno al 31 agosto."}
 
@@ -294,7 +298,7 @@ def parse_pdf(path: Path, as_of: date, expected_date: date | None = None) -> tup
             raise ScheduleError("Numero di pagine EAV inatteso")
         for page_number, page in enumerate(pdf.pages, start=1):
             texts.append(page.extract_text() or "")
-            for table in page.find_tables():
+            for table in page.find_tables(TABLE_SETTINGS):
                 parsed = extract_table(table, page_number)
                 if parsed:
                     tables.append(parsed)

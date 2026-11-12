@@ -1,4 +1,6 @@
 import io
+import gzip
+import importlib.util
 import json
 import shutil
 import tempfile
@@ -27,7 +29,7 @@ def make_table(rows):
 def mock_pdf(payload):
     document = MagicMock()
     page = SimpleNamespace(extract_text=lambda: payload["text"],
-                           find_tables=lambda: [make_table(rows) for rows in payload["tables"]])
+                           find_tables=lambda settings=None: [make_table(rows) for rows in payload["tables"]])
     document.__enter__.return_value = SimpleNamespace(pages=[page])
     return SimpleNamespace(open=lambda path: document)
 
@@ -142,6 +144,44 @@ class PdfTests(unittest.TestCase):
         self.assertEqual(enriched, 20)
         self.assertEqual(len(set(trips) - set(current)), 8)
         self.assertEqual(set(current) - set(trips), set())
+
+
+@unittest.skipUnless(importlib.util.find_spec("pdfplumber"), "Install requirements-timetables.txt for PDF geometry tests")
+class PdfGeometryTests(unittest.TestCase):
+    def geometry(self):
+        source = FIXTURE.with_name("eav-grid-2026-11-12.json.gz")
+        with gzip.open(source, "rt", encoding="utf-8") as stream:
+            return json.load(stream)
+
+    def parse_geometry(self, geometry, settings=None):
+        import pdfplumber
+        from pdfplumber.table import TableFinder
+
+        page = SimpleNamespace(bbox=geometry["bbox"], edges=geometry["edges"], chars=geometry["chars"],
+                               extract_text=lambda: fixture()["text"])
+        page.find_tables = lambda selected=None: TableFinder(page, settings if settings is not None else selected).tables
+        document = MagicMock()
+        document.__enter__.return_value = SimpleNamespace(pages=[page])
+        with patch.object(pdfplumber, "open", return_value=document):
+            return eav.parse_pdf(Path("geometry.pdf"), date(2026, 11, 12))
+
+    def test_failed_run_geometry_keeps_number_rows_and_all_28_journeys(self):
+        geometry = self.geometry()
+        # The actual failing source, including the original 3pt snapping bug.
+        with self.assertRaisesRegex(eav.ScheduleError, "Intestazioni numero/categoria/FER"):
+            self.parse_geometry(geometry, {"snap_y_tolerance": 3})
+        actual, tables, _ = self.parse_geometry(geometry)
+        expected, _, _ = parse_fixture()
+        self.assertEqual([len(table["trips"]) for table in tables], [16, 12])
+        self.assertEqual([trip.csv_row() for trip in actual], [trip.csv_row() for trip in expected])
+        self.assertEqual([trip.stops for trip in actual], [trip.stops for trip in expected])
+        self.assertEqual([trip.flags for trip in actual], [trip.flags for trip in expected])
+
+    def test_missing_number_text_still_blocks_confirmation(self):
+        geometry = self.geometry()
+        geometry["chars"] = [char for char in geometry["chars"] if not 325 <= char["top"] < 332]
+        with self.assertRaisesRegex(eav.ScheduleError, "Intestazioni numero/categoria/FER"):
+            self.parse_geometry(geometry)
 
 
 class ApplicationTests(unittest.TestCase):

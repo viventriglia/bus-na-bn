@@ -127,6 +127,12 @@ unite. Numero di corsa, categoria e capolinea devono essere allineati. BUS 1 e
 BUS 2 (veloce) sono corse distinte anche con uguali numero e orari. Non ci sono
 esclusioni di categorie EAV. Le corse che non collegano entrambe le stazioni
 centrali restano nel report come parziali e non compaiono nel sito.
+La tolleranza verticale di unione dei bordi e' di 1 punto: il valore predefinito
+di 3 punti puo' fondere righe decorative vicine con il bordo superiore della
+tabella, escludendo la riga dei numeri di corsa. Restano obbligatorie e univoche
+le intestazioni numero/categoria/FER e la copertura completa delle colonne.
+Il test di regressione del 12/11/2026 ricostruisce le tabelle con pdfplumber
+dai bordi e dai caratteri del PDF che ha causato il problema.
 
 Nel CSV comune sono aggiunte tre colonne opzionali: categoria, numero corsa,
 note. AIR lascia questi campi vuoti; i suoi aggiornamenti preservano i campi
