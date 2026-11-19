@@ -1,4 +1,5 @@
 import io
+import csv
 import gzip
 import importlib.util
 import json
@@ -185,7 +186,7 @@ class PdfGeometryTests(unittest.TestCase):
 
 
 class ApplicationTests(unittest.TestCase):
-    def run_isolated(self, pdf_bytes=b"%PDF-test"):
+    def run_isolated(self, pdf_bytes=b"%PDF-test", air_count=None):
         with tempfile.TemporaryDirectory() as temporary, ExitStack() as stack:
             folder = Path(temporary)
             before = {}
@@ -195,6 +196,16 @@ class ApplicationTests(unittest.TestCase):
                 shutil.copy2(original, target)
                 before[constant] = target.read_bytes()
                 stack.enter_context(patch.object(eav.generate_data, constant, target))
+            if air_count is not None:
+                rows = [row for row in eav.generate_data.read_trips() if row[4] != "AIR"]
+                rows.extend(air.Trip("benevento_napoli", f"{i // 6:02}:{i % 6 * 10:02}",
+                                     f"{i // 6 + 2:02}:{i % 6 * 10:02}").csv_row()
+                            for i in range(air_count))
+                with eav.generate_data.CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
+                    writer = csv.writer(stream, delimiter=";")
+                    writer.writerow(eav.generate_data.TRIP_COLUMNS)
+                    writer.writerows(eav.generate_data.normalized_trips(rows, eav.generate_data.TRIP_COLUMNS))
+                before["CSV_PATH"] = eav.generate_data.CSV_PATH.read_bytes()
             stack.enter_context(patch("sys.stdout", new=io.StringIO()))
             detail = '<a class="wpdm-download-link" data-downloadurl="https://www.eavsrl.it/download/new/?wpdmdl=12345&amp;refresh=current">Download</a>'
             stack.enter_context(patch.object(eav, "download", side_effect=[
@@ -234,7 +245,25 @@ class ApplicationTests(unittest.TestCase):
         payload = json.loads(after["OUTPUT_PATH"].decode("utf-8").replace("\r\n", "\n").split(" = ", 1)[1].removesuffix(";\n"))
         self.assertEqual(payload["columns"], eav.generate_data.TRIP_COLUMNS)
         self.assertEqual(sum(row[4] == "EAV" for row in payload["trips"]), 28)
-        self.assertEqual(sum(row[4] == "AIR" for row in payload["trips"]), 28)
+        self.assert_air_preserved(before, after)
+
+    def assert_air_preserved(self, before, after):
+        def air_rows(content):
+            reader = csv.DictReader(io.StringIO(content.decode("utf-8-sig")), delimiter=";")
+            return [row for row in reader if row["linea"] == "AIR"]
+        expected = air_rows(before["CSV_PATH"])
+        self.assertEqual(air_rows(after["CSV_PATH"]), expected)
+        payload = json.loads(after["OUTPUT_PATH"].decode("utf-8").split(" = ", 1)[1].strip().removesuffix(";"))
+        self.assertEqual([row for row in payload["trips"] if row[4] == "AIR"],
+                         [[row.get(column, "") for column in payload["columns"]] for row in expected])
+
+    def test_eav_update_preserves_air_when_services_are_removed_or_added(self):
+        for count in (26, 29):
+            with self.subTest(air_services=count):
+                code, report, before, after = self.run_isolated(air_count=count)
+                self.assertEqual(code, 0)
+                self.assertTrue(report["applied"])
+                self.assert_air_preserved(before, after)
 
     def test_html_download_instead_of_pdf_never_changes_data(self):
         code, report, before, after = self.run_isolated(b"<html>download expired</html>")
