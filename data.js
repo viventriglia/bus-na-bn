@@ -293,16 +293,6 @@ window.BUS_SCHEDULE_DATA = {
       "Non si effettua il 24 e il 31 dicembre."
     ],
     [
-      "05:00",
-      "06:30",
-      "Benevento, Terminal bus - via Mustilli",
-      "Napoli Metropark - Terminal bus",
-      "AIR",
-      "",
-      "",
-      ""
-    ],
-    [
       "05:30",
       "07:15",
       "Benevento, Terminal bus - via Mustilli",
@@ -437,16 +427,6 @@ window.BUS_SCHEDULE_DATA = {
       "21:35",
       "Benevento, Terminal bus - via Mustilli",
       "Napoli Metropark - Terminal bus",
-      "AIR",
-      "",
-      "",
-      ""
-    ],
-    [
-      "06:30",
-      "08:30",
-      "Napoli Metropark - Terminal bus",
-      "Benevento, Terminal bus - via Mustilli",
       "AIR",
       "",
       "",
@@ -763,59 +743,19 @@ window.BUS_SCHEDULE_DATA = {
   ],
   "lineUpdates": {
     "AIR": {
-      "updated_at": "2026-10-28T12:07:31.414859+00:00",
-      "checked_at": "2026-11-17T08:09:55.677100+00:00"
+      "updated_at": "2026-11-19T10:24:30.688690+00:00",
+      "checked_at": "2026-11-19T10:24:30.688690+00:00"
     },
     "EAV": {
       "updated_at": "2026-10-28T12:07:33.130446+00:00",
-      "checked_at": "2026-11-17T08:10:01.967267+00:00"
+      "checked_at": "2026-11-19T10:24:37.061164+00:00"
     },
     "MOT.TAM": {
       "updated_at": "2026-09-05T16:47:58+02:00",
-      "checked_at": "2026-11-17T08:10:00.524487+00:00"
+      "checked_at": "2026-11-19T10:24:35.423412+00:00"
     }
   },
   "stopDetails": {
-    "[\"AIR\",\"05:00\",\"06:30\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
-      [
-        {
-          "name": "Benevento, Terminal bus - via Mustilli",
-          "note": "",
-          "time": "05:00"
-        },
-        {
-          "name": "Benevento, Bar 2000",
-          "note": "",
-          "time": "05:02"
-        },
-        {
-          "name": "Benevento, Via San Vito 96",
-          "note": "",
-          "time": "05:07"
-        },
-        {
-          "name": "Benevento, SS7 44, Via Appia DF citroen",
-          "note": "",
-          "time": "05:09"
-        },
-        {
-          "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
-          "note": "",
-          "omittedBefore": true,
-          "time": "06:19"
-        },
-        {
-          "name": "Napoli,C.so Giuseppe Garibaldi,snc",
-          "note": "",
-          "time": "06:28"
-        },
-        {
-          "name": "Napoli Metropark - Terminal bus",
-          "note": "",
-          "time": "06:30"
-        }
-      ]
-    ],
     "[\"AIR\",\"05:30\",\"07:15\",\"Benevento, Terminal bus - via Mustilli\",\"Napoli Metropark - Terminal bus\",\"\",\"\"]": [
       [
         {
@@ -906,12 +846,12 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Bar 2000",
           "note": "",
-          "time": "06:03"
+          "time": "06:01"
         },
         {
           "name": "Benevento, Via San Vito 96",
           "note": "",
-          "time": "06:10"
+          "time": "06:09"
         },
         {
           "name": "Benevento, SS7 44, Via Appia DF citroen",
@@ -922,12 +862,12 @@ window.BUS_SCHEDULE_DATA = {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
           "omittedBefore": true,
-          "time": "07:40"
+          "time": "07:50"
         },
         {
           "name": "Napoli,C.so Giuseppe Garibaldi,snc",
           "note": "",
-          "time": "07:55"
+          "time": "07:58"
         },
         {
           "name": "Napoli Metropark - Terminal bus",
@@ -971,41 +911,6 @@ window.BUS_SCHEDULE_DATA = {
         },
         {
           "name": "Napoli Metropark - Terminal bus",
-          "note": "",
-          "time": "08:30"
-        }
-      ]
-    ],
-    "[\"AIR\",\"06:30\",\"08:30\",\"Napoli Metropark - Terminal bus\",\"Benevento, Terminal bus - via Mustilli\",\"\",\"\"]": [
-      [
-        {
-          "name": "Napoli Metropark - Terminal bus",
-          "note": "",
-          "time": "06:30"
-        },
-        {
-          "name": "Napoli, P.za Garibaldi, Corsia Centrale",
-          "note": "",
-          "time": "06:31"
-        },
-        {
-          "name": "Napoli, Via Oreste Salomone",
-          "note": "",
-          "time": "06:40"
-        },
-        {
-          "name": "Benevento, SS7 105,Via Appia km 258 900",
-          "note": "",
-          "omittedBefore": true,
-          "time": "08:10"
-        },
-        {
-          "name": "Benevento, Bar 2000",
-          "note": "",
-          "time": "08:19"
-        },
-        {
-          "name": "Benevento, Terminal bus - via Mustilli",
           "note": "",
           "time": "08:30"
         }
@@ -1506,7 +1411,7 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Bar 2000",
           "note": "",
-          "time": "15:18"
+          "time": "15:17"
         },
         {
           "name": "Benevento, Via San Vito 96",
@@ -1516,18 +1421,18 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, SS7 44, Via Appia DF citroen",
           "note": "",
-          "time": "15:27"
+          "time": "15:28"
         },
         {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
           "omittedBefore": true,
-          "time": "17:10"
+          "time": "17:19"
         },
         {
           "name": "Napoli,C.so Giuseppe Garibaldi,snc",
           "note": "",
-          "time": "17:25"
+          "time": "17:28"
         },
         {
           "name": "Napoli Metropark - Terminal bus",
@@ -1691,12 +1596,12 @@ window.BUS_SCHEDULE_DATA = {
         {
           "name": "Benevento, Bar 2000",
           "note": "",
-          "time": "18:33"
+          "time": "18:31"
         },
         {
           "name": "Benevento, Via San Vito 96",
           "note": "",
-          "time": "18:40"
+          "time": "18:39"
         },
         {
           "name": "Benevento, SS7 44, Via Appia DF citroen",
@@ -1707,12 +1612,12 @@ window.BUS_SCHEDULE_DATA = {
           "name": "Napoli,V.le Fulco Ruffo di C.,Terminal 2 Aeroporto",
           "note": "",
           "omittedBefore": true,
-          "time": "20:10"
+          "time": "20:20"
         },
         {
           "name": "Napoli,C.so Giuseppe Garibaldi,snc",
           "note": "",
-          "time": "20:25"
+          "time": "20:28"
         },
         {
           "name": "Napoli Metropark - Terminal bus",

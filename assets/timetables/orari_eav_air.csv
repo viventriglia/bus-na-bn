@@ -27,7 +27,6 @@ orario partenza;orario arrivo;stazione partenza;stazione arrivo;linea;categoria;
 18:00;19:43;Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel);Benevento Stazione - via P. Diacono;EAV;BUS 1;3786;
 19:00;20:42;Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel);Benevento Stazione - via P. Diacono;EAV;BUS 1;3788;Non si effettua il 24 e il 31 dicembre.
 20:00;21:41;Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel);Benevento Stazione - via P. Diacono;EAV;BUS 1;3790;Non si effettua il 24 e il 31 dicembre.
-05:00;06:30;Benevento, Terminal bus - via Mustilli;Napoli Metropark - Terminal bus;AIR;;;
 05:30;07:15;Benevento, Terminal bus - via Mustilli;Napoli Metropark - Terminal bus;AIR;;;
 05:50;07:35;Benevento, Terminal bus - via Mustilli;Napoli Metropark - Terminal bus;AIR;;;
 06:00;08:00;Benevento, Terminal bus - via Mustilli;Napoli Metropark - Terminal bus;AIR;;;
@@ -42,7 +41,6 @@ orario partenza;orario arrivo;stazione partenza;stazione arrivo;linea;categoria;
 17:00;19:00;Benevento, Terminal bus - via Mustilli;Napoli Metropark - Terminal bus;AIR;;;
 18:30;20:30;Benevento, Terminal bus - via Mustilli;Napoli Metropark - Terminal bus;AIR;;;
 19:40;21:35;Benevento, Terminal bus - via Mustilli;Napoli Metropark - Terminal bus;AIR;;;
-06:30;08:30;Napoli Metropark - Terminal bus;Benevento, Terminal bus - via Mustilli;AIR;;;
 07:35;09:35;Napoli Metropark - Terminal bus;Benevento, Terminal bus - via Mustilli;AIR;;;
 08:45;10:45;Napoli Metropark - Terminal bus;Benevento, Terminal bus - via Mustilli;AIR;;;
 09:30;11:30;Napoli Metropark - Terminal bus;Benevento, Terminal bus - via Mustilli;AIR;;;
