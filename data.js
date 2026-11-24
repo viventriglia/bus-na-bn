@@ -744,7 +744,7 @@ window.BUS_SCHEDULE_DATA = {
   "lineUpdates": {
     "AIR": {
       "updated_at": "2026-11-19T10:24:30.688690+00:00",
-      "checked_at": "2026-11-21T11:43:54.278032+00:00"
+      "checked_at": "2026-11-24T10:06:53.289672+00:00"
     },
     "EAV": {
       "updated_at": "2026-10-28T12:07:33.130446+00:00",
@@ -752,7 +752,7 @@ window.BUS_SCHEDULE_DATA = {
     },
     "MOT.TAM": {
       "updated_at": "2026-09-05T16:47:58+02:00",
-      "checked_at": "2026-11-21T11:43:57.922176+00:00"
+      "checked_at": "2026-11-24T10:06:57.752840+00:00"
     }
   },
   "stopDetails": {
