@@ -244,6 +244,16 @@ window.BUS_SCHEDULE_DATA = {
     ],
     [
       "16:30",
+      "17:49",
+      "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+      "Benevento Stazione - via P. Diacono",
+      "EAV",
+      "BUS 2 (veloce)",
+      "3784",
+      ""
+    ],
+    [
+      "16:30",
       "18:16",
       "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
       "Benevento Stazione - via P. Diacono",
@@ -744,15 +754,15 @@ window.BUS_SCHEDULE_DATA = {
   "lineUpdates": {
     "AIR": {
       "updated_at": "2026-11-19T10:24:30.688690+00:00",
-      "checked_at": "2026-11-24T10:06:53.289672+00:00"
+      "checked_at": "2026-11-24T10:55:49.895105+00:00"
     },
     "EAV": {
-      "updated_at": "2026-10-28T12:07:33.130446+00:00",
-      "checked_at": "2026-11-21T11:43:59.206218+00:00"
+      "updated_at": "2026-11-24T10:55:55.091337+00:00",
+      "checked_at": "2026-11-24T10:55:55.091337+00:00"
     },
     "MOT.TAM": {
       "updated_at": "2026-09-05T16:47:58+02:00",
-      "checked_at": "2026-11-24T10:06:57.752840+00:00"
+      "checked_at": "2026-11-24T10:55:53.843036+00:00"
     }
   },
   "stopDetails": {
@@ -2158,6 +2168,21 @@ window.BUS_SCHEDULE_DATA = {
           "name": "Benevento Stazione - via P. Diacono",
           "note": "",
           "time": "17:11"
+        }
+      ]
+    ],
+    "[\"EAV\",\"16:30\",\"17:49\",\"Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)\",\"Benevento Stazione - via P. Diacono\",\"BUS 2 (veloce)\",\"3784\"]": [
+      [
+        {
+          "name": "Napoli Centrale - via G. Ferraris (di fronte Ramada Hotel)",
+          "note": "",
+          "time": "16:30"
+        },
+        {
+          "name": "Benevento Stazione - via P. Diacono",
+          "note": "",
+          "omittedBefore": true,
+          "time": "17:49"
         }
       ]
     ],
