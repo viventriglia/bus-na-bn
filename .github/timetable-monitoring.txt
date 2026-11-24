@@ -52,6 +52,10 @@ COME FUNZIONA
    aggiornati su GitHub Pages. Non dipende dal trigger push del commit bot,
    che GitHub normalmente non esegue. Un avvio manuale ripubblica il sito
    anche senza differenze, per consentire di riprovare un deploy fallito.
+   Il workflow Pages usa due job: build prepara e carica l'artefatto,
+   deploy dipende da build e lo pubblica da un nuovo runner. Questo evita
+   la ricerca dell'artefatto immediatamente dopo il caricamento nello stesso
+   job, causa dell'errore intermittente "No artifacts named github-pages".
 8. L'artefatto timetable-reports conserva air-check, mottam-check ed eav-check:
    fonti originali (PDF/HTML), report leggibili, JSON di estrazione, CSV,
    fermate urbane, data.js e line_updates.json proposti. Conservazione: 30 giorni.

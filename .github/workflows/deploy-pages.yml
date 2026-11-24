@@ -23,17 +23,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
-          # Include l'eventuale commit appena creato dal controllo AIR.
+          # Include l'eventuale commit appena creato dal controllo degli orari.
           ref: ${{ github.event.repository.default_branch }}
       - uses: actions/configure-pages@v5
       - name: Prepara i file pubblici
@@ -45,6 +42,15 @@ jobs:
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Pubblica su GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
