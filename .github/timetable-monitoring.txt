@@ -134,6 +134,18 @@ le intestazioni numero/categoria/FER e la copertura completa delle colonne.
 Il test di regressione del 12/11/2026 ricostruisce le tabelle con pdfplumber
 dai bordi e dai caratteri del PDF che ha causato il problema.
 
+Gli orari delle righe delle fermate sono letti dalle coordinate del testo,
+usando le colonne definite dalle intestazioni BUS 1/BUS 2. I bordi verticali
+del corpo della tabella non determinano piu' l'associazione degli orari:
+anche piu' separatori mancanti possono essere ignorati, senza aggiungere
+eccezioni per singole corse, fermate o date. I bordi delle intestazioni
+continuano a definire gli intervalli delle categorie e dei numeri di corsa.
+Ogni orario deve stare interamente in una sola colonna. Due orari nella
+stessa colonna, testo a cavallo di due colonne o ore non valide bloccano EAV.
+Celle vuote e barre di transito restano prive di orario; non si propagano
+valori da una corsa vicina. La suite copre il PDF del 24/11/2026 e la rimozione
+artificiale di tutti i separatori interni nelle righe degli orari.
+
 Nel CSV comune sono aggiunte tre colonne opzionali: categoria, numero corsa,
 note. AIR lascia questi campi vuoti; i suoi aggiornamenti preservano i campi
 EAV. Il vecchio CSV a cinque colonne resta leggibile. Il filtro EAV continua

@@ -159,12 +159,12 @@ class PdfGeometryTests(unittest.TestCase):
         from pdfplumber.table import TableFinder
 
         page = SimpleNamespace(bbox=geometry["bbox"], edges=geometry["edges"], chars=geometry["chars"],
-                               extract_text=lambda: fixture()["text"])
+                               extract_text=lambda: geometry.get("text", fixture()["text"]))
         page.find_tables = lambda selected=None: TableFinder(page, settings if settings is not None else selected).tables
         document = MagicMock()
         document.__enter__.return_value = SimpleNamespace(pages=[page])
         with patch.object(pdfplumber, "open", return_value=document):
-            return eav.parse_pdf(Path("geometry.pdf"), date(2026, 11, 12))
+            return eav.parse_pdf(Path("geometry.pdf"), date(2026, 11, 24))
 
     def test_failed_run_geometry_keeps_number_rows_and_all_28_journeys(self):
         geometry = self.geometry()
@@ -183,6 +183,67 @@ class PdfGeometryTests(unittest.TestCase):
         geometry["chars"] = [char for char in geometry["chars"] if not 325 <= char["top"] < 332]
         with self.assertRaisesRegex(eav.ScheduleError, "Intestazioni numero/categoria/FER"):
             self.parse_geometry(geometry)
+
+    def test_actual_missing_border_keeps_two_1700_times_in_separate_services(self):
+        with gzip.open(FIXTURE.with_name("eav-grid-2026-11-24.json.gz"), "rt", encoding="utf-8") as stream:
+            geometry = json.load(stream)
+        trips, tables, starts = self.parse_geometry(geometry)
+        self.assertEqual(starts, date(2026, 11, 23))
+        self.assertEqual([len(table["trips"]) for table in tables], [16, 13])
+        pair = [trip for trip in trips if trip.number == "3784"]
+        self.assertEqual({(trip.category, trip.departure, trip.arrival) for trip in pair},
+                         {("BUS 1", "16:30", "18:16"), ("BUS 2 (veloce)", "16:30", "17:49")})
+        self.assertEqual({trip.category:len(trip.stops) for trip in pair}, {"BUS 1":4, "BUS 2 (veloce)":2})
+
+    def test_removing_all_internal_body_separators_preserves_service_times(self):
+        from pdfplumber.table import TableFinder
+
+        geometry = self.geometry()
+        original, _, _ = self.parse_geometry(geometry)
+        page = SimpleNamespace(bbox=geometry["bbox"], edges=geometry["edges"], chars=geometry["chars"])
+        grids = []
+        for table in TableFinder(page, eav.TABLE_SETTINGS).tables:
+            values = table.extract()
+            endpoints = [i for i,row in enumerate(values) if row and row[0] in {eav.BN_LABEL,eav.NA_LABEL}]
+            if len(endpoints) != 2:
+                continue
+            category = next(i for i,row in enumerate(values) if any(eav.CATEGORY_RE.fullmatch(c or "") for c in row))
+            bands = [cell for text,cell in zip(values[category],table.rows[category].cells)
+                     if cell and eav.CATEGORY_RE.fullmatch(text or "")]
+            grids.append((min(b[0] for b in bands), table.rows[min(endpoints)].bbox[1],
+                          max(b[2] for b in bands), table.rows[max(endpoints)].bbox[3]))
+        for left, top, right, bottom in grids:
+            edges = []
+            for edge in geometry["edges"]:
+                if edge["orientation"] != "v" or not left+1 < edge["x0"] < right-1 or edge["bottom"] <= top or edge["top"] >= bottom:
+                    edges.append(edge)
+                    continue
+                if edge["top"] < top:
+                    edges.append({**edge, "bottom":top, "height":top-edge["top"]})
+                if edge["bottom"] > bottom:
+                    edges.append({**edge, "top":bottom, "height":edge["bottom"]-bottom})
+            geometry["edges"] = edges
+        actual, _, _ = self.parse_geometry(geometry)
+        self.assertEqual([trip.csv_row() for trip in actual], [trip.csv_row() for trip in original])
+        self.assertEqual([trip.stops for trip in actual], [trip.stops for trip in original])
+
+    def time_table(self, entries):
+        chars = []
+        for text, start in entries:
+            chars.extend({"text":char, "x0":start+i*3, "x1":start+(i+1)*3,
+                          "top":2, "bottom":8, "doctop":2, "upright":True} for i,char in enumerate(text))
+        return SimpleNamespace(page=SimpleNamespace(chars=chars), rows=[SimpleNamespace(bbox=(0,0,100,10))])
+
+    def test_blank_cells_are_not_forward_filled(self):
+        bands = [(10,0,50,10),(50,0,90,10)]
+        result = eav.read_time_cells(self.time_table([("17:00",20)]),0,bands)
+        self.assertEqual(list(result.values()), ["17:00", ""])
+
+    def test_ambiguous_duplicate_and_invalid_times_require_review(self):
+        bands = [(10,0,50,10),(50,0,90,10)]
+        for entries in [[("17:00",44)], [("17:00",12),("18:00",32)], [("27:00",20)]]:
+            with self.subTest(entries=entries), self.assertRaises(eav.ScheduleError):
+                eav.read_time_cells(self.time_table(entries),0,bands)
 
 
 class ApplicationTests(unittest.TestCase):

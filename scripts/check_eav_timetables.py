@@ -189,6 +189,40 @@ def single_cell(row, values: list, band: tuple) -> str:
     return found[0][0].strip()
 
 
+def read_time_cells(table, index: int, bands: list) -> dict:
+    """Assign text to header columns independently of body-cell borders.
+
+    Every token must fit one column completely. Blank cells remain blank;
+    multiple times in a column or a token crossing a boundary require review.
+    Header spans remain structural: merged number/validity cells are intentional.
+    """
+    row = table.rows[index]
+    if not hasattr(table, "page"):
+        # Pre-extracted cell fixtures do not include page characters.
+        values = table.extract()[index]
+        return {tuple(band): parse_time(single_cell(row, values, band)) or "" for band in bands}
+    from pdfplumber.utils import extract_words
+
+    top, bottom = row.bbox[1], row.bbox[3]
+    left, right = min(band[0] for band in bands), max(band[2] for band in bands)
+    chars = [char for char in table.page.chars if top <= (char["top"] + char["bottom"]) / 2 < bottom]
+    tokens = extract_words(chars, x_tolerance=1, y_tolerance=1)
+    cells = {tuple(band): [] for band in bands}
+    for token in tokens:
+        # Through-stop bars are often centered on a merged service cell,
+        # including between BUS 1 and BUS 2. They never supply an arrival time.
+        if token["text"] in {"|", "-", "--"}:
+            continue
+        if token["x1"] <= left or token["x0"] >= right:
+            continue
+        matches = [band for band in bands
+                   if token["x0"] >= band[0] - 0.5 and token["x1"] <= band[2] + 0.5]
+        if len(matches) != 1:
+            raise ScheduleError(f"Testo orario EAV tra colonne o fuori griglia: {token['text']!r}")
+        cells[tuple(matches[0])].append(token["text"])
+    return {band: parse_time(" ".join(parts)) or "" for band, parts in cells.items()}
+
+
 def extract_table(table, page_number: int) -> dict | None:
     values = table.extract()
     endpoints = {}
@@ -235,6 +269,8 @@ def extract_table(table, page_number: int) -> dict | None:
             edge = band[2]
         if abs(edge - parent[2]) > 0.5:
             raise ScheduleError("Una corsa numerata non ha categorie bus complete")
+    time_rows = {index: read_time_cells(table, index, bands)
+                 for index in range(origin_index, destination_index + 1)}
     trips, partial = [], []
     for column, text in enumerate(values[category_index]):
         match = CATEGORY_RE.fullmatch(text or "")
@@ -248,8 +284,8 @@ def extract_table(table, page_number: int) -> dict | None:
             raise ScheduleError("Numero di corsa EAV non valido")
         if single_cell(table.rows[weekday_index], values[weekday_index], band) != "FER":
             raise ScheduleError("Validita' EAV non riconosciuta")
-        departure = parse_time(single_cell(table.rows[origin_index], values[origin_index], band))
-        arrival = parse_time(single_cell(table.rows[destination_index], values[destination_index], band))
+        departure = time_rows[origin_index][tuple(band)] or None
+        arrival = time_rows[destination_index][tuple(band)] or None
         flags = set()
         for index in range(weekday_index + 1, category_index):
             for flag_text, _ in cells_in_band(table.rows[index], values[index], band):
@@ -269,7 +305,7 @@ def extract_table(table, page_number: int) -> dict | None:
         previous = minutes(departure)
         for index in range(origin_index, destination_index + 1):
             label = (values[index][0] or "").strip()
-            when = parse_time(single_cell(table.rows[index], values[index], band))
+            when = time_rows[index][tuple(band)] or None
             if when is None:
                 continue
             if not re.match(r"^(benevento|napoli)\b", normalized(label)):
